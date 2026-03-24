@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design A: Ocean Breeze — Zdaj B1</title>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0c1929;
+  font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== PAGE TITLE ========== */
+.page-title {
+  color: #94a3b8;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.page-title span { color: #3b82f6; }
+.page-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 18px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ========== CSS CUSTOM PROPERTIES ========== */
+.ipad-frame {
+  --bg: #f0f4f8;
+  --bg-card: rgba(255,255,255,0.72);
+  --bg-card-border: rgba(255,255,255,0.2);
+  --bg-card-inner: inset 0 1px 0 rgba(255,255,255,0.15);
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --accent: #f97316;
+  --nav-bg: rgba(240,244,248,0.88);
+  --nav-border: rgba(0,0,0,0.06);
+  --tab-bg: rgba(255,255,255,0.72);
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --card-hover-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  --input-bg: rgba(37,99,235,0.04);
+  --input-focus-bg: rgba(249,115,22,0.06);
+  --border-light: rgba(0,0,0,0.06);
+  --progress-bg: rgba(0,0,0,0.06);
+  --exercise-bg: rgba(37,99,235,0.06);
+  --exercise-border: #2563eb;
+  --question-bg: rgba(255,255,255,0.7);
+  --question-border: rgba(0,0,0,0.04);
+  --radio-hover: rgba(37,99,235,0.05);
+  --word-bank-bg: rgba(249,115,22,0.06);
+  --word-bank-border: rgba(249,115,22,0.15);
+  --word-bank-item-bg: #fff;
+  --drop-zone-bg: rgba(37,99,235,0.02);
+  --drop-zone-border: rgba(37,99,235,0.3);
+  --drag-item-bg: rgba(255,255,255,0.9);
+  --drag-item-border: rgba(37,99,235,0.2);
+  --writing-area-bg: rgba(255,255,255,0.8);
+  --writing-area-border: rgba(0,0,0,0.1);
+  --toggle-bg: #cbd5e1;
+  --scrollbar: rgba(0,0,0,0.12);
+  --grammar-errors-bg: linear-gradient(135deg, rgba(217,68,68,0.08), rgba(217,68,68,0.03));
+  --grammar-errors-border: rgba(217,68,68,0.12);
+  --grammar-topics-bg: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03));
+  --grammar-topics-border: rgba(37,99,235,0.12);
+  --expandable-bg: rgba(255,255,255,0.85);
+  --expandable-body-bg: rgba(255,255,255,0.5);
+  --alpha-bg: rgba(255,255,255,0.85);
+  --alpha-border: rgba(0,0,0,0.06);
+  --danger-color: #dc2626;
+  --danger-border: #fca5a5;
+  --pf-border: rgba(0,0,0,0.05);
+  --photo-sky: linear-gradient(180deg, #87ceeb 0%, #b0d4f1 100%);
+  --photo-ground: linear-gradient(135deg, #a8d8a0 0%, #6db86b 40%, #4a9e5a 70%, #2d7a3d 100%);
+
+  transition: background 0.3s, color 0.3s;
+}
+
+.ipad-frame[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: rgba(30,41,59,0.75);
+  --bg-card-border: rgba(255,255,255,0.08);
+  --bg-card-inner: inset 0 1px 0 rgba(255,255,255,0.06);
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --primary: #3b82f6;
+  --primary-light: #60a5fa;
+  --accent: #fb923c;
+  --nav-bg: rgba(15,23,42,0.88);
+  --nav-border: rgba(255,255,255,0.06);
+  --tab-bg: rgba(30,41,59,0.8);
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.15);
+  --card-hover-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  --input-bg: rgba(59,130,246,0.08);
+  --input-focus-bg: rgba(251,146,60,0.1);
+  --border-light: rgba(255,255,255,0.06);
+  --progress-bg: rgba(255,255,255,0.08);
+  --exercise-bg: rgba(59,130,246,0.1);
+  --exercise-border: #3b82f6;
+  --question-bg: rgba(30,41,59,0.6);
+  --question-border: rgba(255,255,255,0.04);
+  --radio-hover: rgba(59,130,246,0.1);
+  --word-bank-bg: rgba(251,146,60,0.08);
+  --word-bank-border: rgba(251,146,60,0.15);
+  --word-bank-item-bg: rgba(30,41,59,0.8);
+  --drop-zone-bg: rgba(59,130,246,0.04);
+  --drop-zone-border: rgba(59,130,246,0.3);
+  --drag-item-bg: rgba(30,41,59,0.8);
+  --drag-item-border: rgba(59,130,246,0.25);
+  --writing-area-bg: rgba(30,41,59,0.6);
+  --writing-area-border: rgba(255,255,255,0.08);
+  --toggle-bg: #475569;
+  --scrollbar: rgba(255,255,255,0.1);
+  --grammar-errors-bg: linear-gradient(135deg, rgba(220,38,38,0.12), rgba(220,38,38,0.05));
+  --grammar-errors-border: rgba(220,38,38,0.2);
+  --grammar-topics-bg: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.05));
+  --grammar-topics-border: rgba(59,130,246,0.2);
+  --expandable-bg: rgba(30,41,59,0.75);
+  --expandable-body-bg: rgba(30,41,59,0.5);
+  --alpha-bg: rgba(30,41,59,0.75);
+  --alpha-border: rgba(255,255,255,0.06);
+  --danger-color: #ef4444;
+  --danger-border: rgba(239,68,68,0.3);
+  --pf-border: rgba(255,255,255,0.05);
+  --photo-sky: linear-gradient(180deg, #1e3a5f 0%, #2d4a7a 100%);
+  --photo-ground: linear-gradient(135deg, #2d5a27 0%, #3d7a3d 40%, #2a6e2a 70%, #1a4d1a 100%);
+}
+
+/* ========== iPad FRAME ========== */
+.ipad-frame {
+  width: 1194px;
+  height: 834px;
+  background: var(--bg);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 0 3px #1e293b, 0 20px 80px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+@media (max-width: 1240px) {
+  .ipad-frame { transform: scale(0.8); transform-origin: top center; }
+}
+@media (max-width: 980px) {
+  .ipad-frame { transform: scale(0.6); transform-origin: top center; }
+}
+@media (max-width: 740px) {
+  .ipad-frame { transform: scale(0.42); transform-origin: top center; }
+}
+
+/* ========== THEME TOGGLE ========== */
+.theme-toggle {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--bg-card-border);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: var(--bg-card-inner);
+}
+.theme-toggle:hover { transform: scale(1.08); }
+.theme-toggle svg { width: 18px; height: 18px; stroke: var(--text); fill: none; stroke-width: 1.8; }
+.theme-toggle .icon-moon { display: none; }
+.ipad-frame[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+.ipad-frame[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+/* ========== NAV BAR ========== */
+.nav-bar {
+  height: 52px;
+  min-height: 52px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--nav-border);
+  position: relative;
+  z-index: 10;
+  transition: background 0.3s;
+}
+.nav-bar .back-btn {
+  position: absolute;
+  left: 16px;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+}
+.nav-bar .back-btn:hover { opacity: 0.7; }
+.nav-bar .nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+/* ========== CONTENT AREA ========== */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  transition: background 0.3s;
+}
+.content-area::-webkit-scrollbar { width: 4px; }
+.content-area::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 4px; }
+
+/* ========== TAB BAR ========== */
+.tab-bar {
+  height: 64px;
+  min-height: 64px;
+  background: var(--tab-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--bg-card-border);
+  box-shadow: var(--bg-card-inner), 0 -2px 20px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 10;
+  margin: 0 12px 12px;
+  border-radius: 24px;
+  transition: background 0.3s;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 8px 22px;
+  border-radius: 16px;
+  transition: all 0.2s;
+  position: relative;
+}
+.tab-item .tab-icon { display: flex; align-items: center; justify-content: center; }
+.tab-item .tab-icon svg { width: 24px; height: 24px; stroke: var(--text-muted); transition: stroke 0.3s; }
+.tab-item .tab-label { font-size: 11px; color: var(--text-muted); font-weight: 500; transition: color 0.3s; }
+.tab-item.active {
+  background: rgba(37,99,235,0.1);
+}
+.ipad-frame[data-theme="dark"] .tab-item.active {
+  background: rgba(59,130,246,0.15);
+}
+.tab-item.active .tab-label { color: var(--primary); font-weight: 600; }
+.tab-item.active .tab-icon svg { stroke: var(--primary); }
+
+/* ========== SCREEN CONTAINERS ========== */
+.screen { display: none; padding: 24px; height: 100%; }
+.screen.active { display: block; }
+.screen-scroll { padding: 24px; }
+
+/* ========== GLASS CARD ========== */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-radius: 14px;
+  border: 1px solid var(--bg-card-border);
+  box-shadow: var(--card-shadow), var(--bg-card-inner);
+  padding: 18px;
+  margin-bottom: 14px;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+}
+.card:hover { box-shadow: var(--card-hover-shadow), var(--bg-card-inner); }
+.card-clickable { cursor: pointer; }
+.card-clickable:active { transform: scale(0.98); }
+.card-clickable:hover { transform: translateY(-1px); }
+
+/* ========== HOME GRID ========== */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 700px;
+  margin: 30px auto 0;
+}
+.home-card {
+  text-align: center;
+  padding: 28px 18px;
+}
+.home-card .hc-icon { margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+.home-card .hc-icon svg { width: 36px; height: 36px; stroke: var(--primary); fill: none; stroke-width: 1.5; }
+.home-card .hc-title { font-size: 16px; font-weight: 600; color: var(--text); transition: color 0.3s; }
+
+/* ========== BUTTONS ========== */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 13px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s, transform 0.1s;
+  box-shadow: var(--bg-card-inner), 0 2px 8px rgba(37,99,235,0.3);
+  backdrop-filter: blur(8px);
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  background: rgba(37,99,235,0.08);
+  color: var(--primary);
+  border: 1.5px solid rgba(37,99,235,0.2);
+  border-radius: 12px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.btn-secondary:hover { background: rgba(37,99,235,0.14); }
+
+.btn-danger {
+  background: var(--bg-card);
+  color: var(--danger-color);
+  border: 1.5px solid var(--danger-border);
+  border-radius: 12px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  backdrop-filter: blur(8px);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ========== SECTION TITLE ========== */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+  transition: color 0.3s;
+}
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  transition: color 0.3s;
+}
+
+/* ========== LIST ITEMS ========== */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid var(--bg-card-border);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03), var(--bg-card-inner);
+  transition: all 0.15s;
+}
+.list-item:hover { transform: translateY(-1px); box-shadow: var(--card-hover-shadow); }
+.list-item:active { transform: scale(0.98); }
+.list-item .li-icon { margin-right: 14px; display: flex; align-items: center; }
+.list-item .li-icon svg { width: 20px; height: 20px; stroke: var(--primary); fill: none; }
+.list-item .li-text { flex: 1; font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.3s; }
+.list-item .li-arrow { color: var(--text-muted); font-size: 18px; }
+
+/* ========== EXERCISE STYLES ========== */
+.exercise-instruction {
+  background: var(--exercise-bg);
+  border-left: 3px solid var(--exercise-border);
+  padding: 14px 18px;
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+.exercise-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 20px;
+  transition: color 0.3s;
+}
+
+.example-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.answer-filled {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.answer-gap {
+  display: inline-block;
+  min-width: 80px;
+  border-bottom: 2px dashed var(--primary);
+  padding: 0 4px;
+  margin: 0 2px;
+  text-align: center;
+}
+
+.question-block {
+  margin-bottom: 18px;
+  padding: 16px;
+  background: var(--question-bg);
+  border-radius: 12px;
+  border: 1px solid var(--question-border);
+  transition: background 0.3s;
+}
+
+.radio-group { margin-top: 10px; }
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 14px;
+  color: var(--text);
+}
+.radio-option:hover { background: var(--radio-hover); }
+.radio-option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.3s, background 0.3s;
+}
+.radio-option input[type="radio"]:checked {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.radio-option input[type="radio"]:checked::after {
+  content: '\2713';
+  color: #fff;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+}
+.radio-option.correct-selected {
+  background: rgba(37,99,235,0.1);
+}
+.radio-option.correct-selected input[type="radio"] {
+  border-color: var(--primary);
+  background: var(--primary);
+  pointer-events: none;
+}
+
+/* P/F radio */
+.pf-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--pf-border);
+  font-size: 14px;
+  color: var(--text);
+  transition: color 0.3s;
+}
+.pf-row:last-child { border-bottom: none; }
+.pf-text { flex: 1; padding-right: 16px; line-height: 1.5; }
+.pf-options { display: flex; gap: 12px; flex-shrink: 0; }
+.pf-options label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.pf-options input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border: 2px solid var(--text-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+}
+.pf-options input[type="radio"]:checked {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.pf-options input[type="radio"]:checked::after {
+  content: '\2713'; color: #fff;
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+}
+
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+
+/* INPUT FIELDS */
+.gap-input {
+  display: inline-block;
+  width: 120px;
+  border: none;
+  border-bottom: 2px solid var(--primary);
+  background: var(--input-bg);
+  padding: 3px 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  outline: none;
+  border-radius: 4px 4px 0 0;
+  margin: 0 2px;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.gap-input:focus { border-bottom-color: var(--accent); background: var(--input-focus-bg); }
+.gap-input.wide { width: 200px; }
+.gap-input.xwide { width: 100%; max-width: 500px; }
+
+/* SELECT STYLE */
+select.gap-input {
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+/* DRAG & DROP */
+.drop-zone {
+  min-height: 120px;
+  border: 2px dashed var(--drop-zone-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  background: var(--drop-zone-bg);
+  transition: background 0.3s;
+}
+.drop-zone-label {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 20px;
+}
+.drag-item {
+  display: inline-block;
+  padding: 10px 16px;
+  background: var(--drag-item-bg);
+  border: 1.5px solid var(--drag-item-border);
+  border-radius: 10px;
+  margin: 5px;
+  cursor: grab;
+  font-size: 14px;
+  color: var(--text);
+  user-select: none;
+  transition: all 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  backdrop-filter: blur(8px);
+}
+.drag-item:active { cursor: grabbing; transform: scale(1.03); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.drag-items-container { margin: 12px 0; }
+
+/* TEXTAREA */
+.writing-area {
+  width: 100%;
+  min-height: 180px;
+  border: 1.5px solid var(--writing-area-border);
+  border-radius: 12px;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  background: var(--writing-area-bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.writing-area:focus { border-color: var(--primary); }
+.word-counter { text-align: right; font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+/* TIMER */
+.timer-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(220,38,38,0.08);
+  color: var(--danger-color);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+/* PHOTO PLACEHOLDER */
+.photo-placeholder {
+  width: 100%;
+  max-width: 420px;
+  height: 200px;
+  border-radius: 14px;
+  background: var(--photo-ground);
+  position: relative;
+  overflow: hidden;
+  margin: 12px 0;
+  transition: background 0.3s;
+}
+.photo-placeholder::after {
+  content: '\1F333\1F468\200D\1F469\200D\1F467\200D\1F466\1F333';
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+}
+.photo-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: var(--photo-sky);
+  transition: background 0.3s;
+}
+
+/* TOGGLE SWITCH */
+.toggle-switch {
+  position: relative;
+  width: 48px; height: 28px;
+  display: inline-block;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--toggle-bg);
+  border-radius: 28px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  left: 3px; bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* PROGRESS BAR */
+.progress-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.progress-label { width: 110px; font-weight: 500; color: var(--text-secondary); transition: color 0.3s; }
+.progress-bar-bg {
+  flex: 1;
+  height: 10px;
+  background: var(--progress-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 12px;
+  transition: background 0.3s;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--primary), #60a5fa);
+  transition: width 0.5s;
+}
+.progress-value { width: 50px; text-align: right; font-weight: 600; color: var(--text); transition: color 0.3s; }
+
+/* RESULT ROW */
+.result-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(150%);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid var(--bg-card-border);
+  transition: background 0.3s;
+}
+.result-row .rr-label { flex: 1; font-weight: 500; font-size: 15px; color: var(--text); }
+.result-row .rr-value { font-weight: 700; font-size: 16px; color: var(--primary); margin-right: 10px; }
+.result-row .rr-arrow { color: var(--text-muted); cursor: pointer; }
+
+/* PROFILE */
+.profile-header {
+  text-align: center;
+  padding: 20px 0;
+}
+.profile-avatar {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--primary), #60a5fa);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #fff;
+  margin: 0 auto 10px;
+}
+.profile-name { font-size: 20px; font-weight: 700; color: var(--text); transition: color 0.3s; }
+.profile-email { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--text-secondary); }
+.info-value { font-weight: 600; color: var(--text); transition: color 0.3s; }
+
+/* ALPHABET GRID */
+.alpha-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.alpha-card {
+  background: var(--alpha-bg);
+  border: 1px solid var(--alpha-border);
+  border-radius: 10px;
+  padding: 14px 8px;
+  text-align: center;
+  backdrop-filter: blur(16px) saturate(150%);
+  transition: background 0.3s;
+}
+.alpha-letter { font-size: 22px; font-weight: 700; color: var(--primary); }
+.alpha-word { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* EXPANDABLE */
+.expandable { margin-bottom: 10px; }
+.expandable-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--expandable-bg);
+  backdrop-filter: blur(16px) saturate(150%);
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px solid var(--bg-card-border);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  box-shadow: var(--bg-card-inner);
+  transition: background 0.3s, color 0.3s;
+}
+.expandable-header .exp-arrow { transition: transform 0.2s; }
+.expandable.open .exp-arrow { transform: rotate(90deg); }
+.expandable-body {
+  display: none;
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  background: var(--expandable-body-bg);
+  border-radius: 0 0 12px 12px;
+  margin-top: -6px;
+  transition: background 0.3s, color 0.3s;
+}
+.expandable.open .expandable-body { display: block; }
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* WORD BANK */
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--word-bank-bg);
+  border: 1px solid var(--word-bank-border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  transition: background 0.3s;
+}
+.word-bank-item {
+  padding: 6px 12px;
+  background: var(--word-bank-item-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* EXAM SCHEDULE */
+.exam-date-card {
+  padding: 16px 18px;
+  margin-bottom: 10px;
+}
+.exam-date { font-weight: 700; color: var(--primary); font-size: 16px; margin-bottom: 4px; }
+.exam-info { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+
+/* SET CARD */
+.set-card {
+  padding: 20px;
+  margin-bottom: 14px;
+  border-left: 4px solid var(--primary);
+}
+.set-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--primary); }
+.set-task { font-size: 14px; margin-bottom: 8px; line-height: 1.5; color: var(--text-secondary); }
+.set-task strong { color: var(--text); }
+
+/* GRAMMAR TOPIC BANNER */
+.grammar-banner {
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.grammar-banner.errors {
+  background: var(--grammar-errors-bg);
+  border: 1px solid var(--grammar-errors-border);
+}
+.grammar-banner.topics {
+  background: var(--grammar-topics-bg);
+  border: 1px solid var(--grammar-topics-border);
+}
+.grammar-banner-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); transition: color 0.3s; }
+.grammar-banner-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* TWO COLUMNS for exercises */
+.two-col { display: flex; gap: 24px; }
+.two-col .col-main { flex: 2; }
+.two-col .col-side { flex: 1; }
+
+/* Utility */
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.text-center { text-align: center; }
+.text-small { font-size: 13px; color: var(--text-muted); }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.underline-text { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">Design A: <span>Ocean Breeze</span></div>
+<div class="page-subtitle">Deep blue with coral accents, frosted glass panels</div>
+
+<div class="ipad-frame" id="ipadFrame">
+  <!-- THEME TOGGLE -->
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  </button>
+
+  <!-- NAV BAR -->
+  <div class="nav-bar" id="navBar">
+    <button class="back-btn" id="backBtn" style="display:none" onclick="goBack()">&#8249; Wr&oacute;c</button>
+    <span class="nav-title" id="navTitle">Zdaj B1</span>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area" id="contentArea">
+
+    <!-- ==================== TAB 1: GLOWNA ==================== -->
+    <div class="screen active" id="screen-home">
+      <div class="screen-scroll">
+        <div class="home-grid">
+          <div class="card card-clickable home-card" onclick="navigateTo('screen-exercises','Ćwiczenia',1)">
+            <div class="hc-icon"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+            <div class="hc-title">Tryb ćwiczeń</div>
+          </div>
+          <div class="card card-clickable home-card" onclick="navigateTo('screen-faq','Pomoc i FAQ')">
+            <div class="hc-icon"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="hc-title">Pomoc i FAQ</div>
+          </div>
+          <div class="card card-clickable home-card" onclick="navigateTo('screen-exam-schedule','Harmonogram egzaminów')">
+            <div class="hc-icon"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="hc-title">Harmonogram egzaminów</div>
+          </div>
+          <div class="card card-clickable home-card" onclick="navigateTo('screen-grammar-guide','Przewodnik gramatyczny')">
+            <div class="hc-icon"><svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2V3z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7V3z"/></svg></div>
+            <div class="hc-title">Przewodnik gramatyczny</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="screen" id="screen-faq">
+      <div class="screen-scroll">
+        <div class="section-title">Pomoc i FAQ</div>
+        <div class="expandable" onclick="toggleExpand(this)">
+          <div class="expandable-header">
+            <span>O aplikacji Zdaj B1</span>
+            <span class="exp-arrow">›</span>
+          </div>
+          <div class="expandable-body">
+            Zdaj B1 to aplikacja stworzona z myślą o osobach przygotowujących się do egzaminu z języka polskiego na poziomie B1.
+            Znajdziesz tu ćwiczenia ze słuchania, czytania, gramatyki, pisania i mówienia — dokładnie takie, jakie pojawiają się
+            na oficjalnym egzaminie certyfikatowym. Aplikacja śledzi Twoje postępy i dostosowuje zadania do Twoich potrzeb.
+            Ćwicz w swoim tempie i zdaj egzamin z pewnością siebie!
+          </div>
+        </div>
+        <div class="expandable" onclick="toggleExpand(this)">
+          <div class="expandable-header">
+            <span>Polityka Prywatności</span>
+            <span class="exp-arrow">›</span>
+          </div>
+          <div class="expandable-body">
+            Twoja prywatność jest dla nas ważna. Zbieramy wyłącznie dane niezbędne do działania aplikacji:
+            adres e-mail, postępy w nauce oraz statystyki ćwiczeń. Nie udostępniamy Twoich danych osobom trzecim.
+            Dane są przechowywane na bezpiecznych serwerach w Unii Europejskiej. Możesz w każdej chwili poprosić
+            o usunięcie swojego konta i wszystkich powiązanych danych.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Formularz kontaktowy zostanie otwarty.')">Zadaj pytanie</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAM SCHEDULE -->
+    <div class="screen" id="screen-exam-schedule">
+      <div class="screen-scroll">
+        <div class="section-title">Harmonogram egzaminów 2026</div>
+        <div class="card exam-date-card">
+          <div class="exam-date">14-15.02.2026</div>
+          <div class="exam-info">B1 i B2 – dla osób dorosłych<br>B1 i B2 – dla dzieci i młodzieży</div>
+        </div>
+        <div class="card exam-date-card">
+          <div class="exam-date">25-26.04.2026</div>
+          <div class="exam-info">B1 i C1 – dla osób dorosłych</div>
+        </div>
+        <div class="card exam-date-card">
+          <div class="exam-date">27-28.06.2026</div>
+          <div class="exam-info">B1 i B2 – dla osób dorosłych</div>
+        </div>
+        <div class="card exam-date-card">
+          <div class="exam-date">17-18.10.2026</div>
+          <div class="exam-info">B1 i C1 – dla osób dorosłych</div>
+        </div>
+        <div class="card exam-date-card">
+          <div class="exam-date">5-6.12.2026</div>
+          <div class="exam-info">B1 – dla osób dorosłych</div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Przekierowanie do strony z lokalizacjami egzaminów.')">Sprawdź lokalizacje</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR GUIDE -->
+    <div class="screen" id="screen-grammar-guide">
+      <div class="screen-scroll">
+        <div class="section-title">Przewodnik gramatyczny</div>
+        <div class="list-item" onclick="navigateTo('screen-alphabet','Alfabet')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span>
+          <span class="li-text">Alfabet</span>
+          <span class="li-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALPHABET -->
+    <div class="screen" id="screen-alphabet">
+      <div class="screen-scroll">
+        <div class="section-title">Alfabet polski</div>
+        <div class="alpha-grid">
+          <div class="alpha-card"><div class="alpha-letter">Aa</div><div class="alpha-word">auto</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ąą</div><div class="alpha-word">wąż</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Bb</div><div class="alpha-word">balon</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Cc</div><div class="alpha-word">cukier</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ćć</div><div class="alpha-word">ćma</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Dd</div><div class="alpha-word">dom</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ee</div><div class="alpha-word">elf</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ęę</div><div class="alpha-word">gęś</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ff</div><div class="alpha-word">flaga</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Gg</div><div class="alpha-word">gwiazda</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Hh</div><div class="alpha-word">harfa</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ii</div><div class="alpha-word">igła</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Jj</div><div class="alpha-word">jabłko</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Kk</div><div class="alpha-word">kot</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ll</div><div class="alpha-word">liść</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Łł</div><div class="alpha-word">łódka</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Mm</div><div class="alpha-word">mleko</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Nn</div><div class="alpha-word">nos</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ńń</div><div class="alpha-word">koń</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Oo</div><div class="alpha-word">oko</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Óó</div><div class="alpha-word">ból</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Pp</div><div class="alpha-word">pies</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Rr</div><div class="alpha-word">rower</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ss</div><div class="alpha-word">słońce</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Śś</div><div class="alpha-word">świat</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Tt</div><div class="alpha-word">torba</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Uu</div><div class="alpha-word">ucho</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Ww</div><div class="alpha-word">woda</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Yy</div><div class="alpha-word">mysz</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Zz</div><div class="alpha-word">zamek</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Źź</div><div class="alpha-word">źródło</div></div>
+          <div class="alpha-card"><div class="alpha-letter">Żż</div><div class="alpha-word">żaba</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: CWICZENIA ==================== -->
+    <div class="screen" id="screen-exercises">
+      <div class="screen-scroll">
+        <div class="section-title">Ćwiczenia</div>
+        <div class="list-item" onclick="navigateTo('screen-ex-listening','Rozumienie ze słuchu')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3v5zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3v5z"/></svg></span>
+          <span class="li-text">Rozumienie ze słuchu</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-ex-reading-list','Rozumienie tekstu')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2V3z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7V3z"/></svg></span>
+          <span class="li-text">Rozumienie tekstu</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-ex-grammar','Gramatyka')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span>
+          <span class="li-text">Gramatyka</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-ex-writing','Pisanie')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+          <span class="li-text">Pisanie</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-ex-speaking','Mówienie')">
+          <span class="li-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
+          <span class="li-text">Mówienie</span>
+          <span class="li-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTENING EXERCISE -->
+    <div class="screen" id="screen-ex-listening">
+      <div class="screen-scroll">
+        <div class="section-title">Wybór wielokrotny</div>
+        <div class="exercise-instruction">
+          Proszę uważnie słuchać nagrania i wybrać poprawną odpowiedź.
+        </div>
+
+        <!-- Example -->
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span> Ten komunikat dotyczy:</div>
+          <div style="display:flex;align-items:center;margin-bottom:8px">
+            <button class="play-btn" onclick="alert('Odtwarzanie nagrania...')">&#9654;</button>
+            <span class="text-small">Nagranie 0</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="ex0" disabled> opóźnienia pociągu</label>
+            <label class="radio-option"><input type="radio" name="ex0" disabled> zmiany peronu</label>
+            <label class="radio-option correct-selected"><input type="radio" name="ex0" checked disabled> odwołania kursu</label>
+          </div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong> Rozmowa dotyczy:</div>
+          <div style="display:flex;align-items:center;margin-bottom:8px">
+            <button class="play-btn" onclick="alert('Odtwarzanie nagrania...')">&#9654;</button>
+            <span class="text-small">Nagranie 1</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="listen1"> planów na weekend</label>
+            <label class="radio-option"><input type="radio" name="listen1"> zakupów w sklepie</label>
+            <label class="radio-option"><input type="radio" name="listen1"> wizyty u lekarza</label>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-block">
+          <div class="mb-8"><strong>2.</strong> Wypowiedź dotyczy:</div>
+          <div style="display:flex;align-items:center;margin-bottom:8px">
+            <button class="play-btn" onclick="alert('Odtwarzanie nagrania...')">&#9654;</button>
+            <span class="text-small">Nagranie 2</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="listen2"> pogody na jutro</label>
+            <label class="radio-option"><input type="radio" name="listen2"> przepisu na ciasto</label>
+            <label class="radio-option"><input type="radio" name="listen2"> remontu mieszkania</label>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING LIST -->
+    <div class="screen" id="screen-ex-reading-list">
+      <div class="screen-scroll">
+        <div class="section-title">Rozumienie tekstu</div>
+        <div class="list-item" onclick="navigateTo('screen-reading-1','Dopasuj odpowiedzi do fragmentu')">
+          <span class="li-text">1. Dopasuj odpowiedzi do fragmentu</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-2','Dopasuj odpowiedzi do sytuacji')">
+          <span class="li-text">2. Dopasuj odpowiedzi do sytuacji</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-3','Prawda / Fałsz')">
+          <span class="li-text">3. Prawda / Fałsz / Brak informacji</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-4','Ułóż fragmenty')">
+          <span class="li-text">4. Ułóż fragmenty w logiczną całość</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-5','Uzupełnij tekst fragmentami')">
+          <span class="li-text">5. Uzupełnij tekst fragmentami</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-6','Uzupełnij tekst słowami')">
+          <span class="li-text">6. Uzupełnij tekst słowami</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-7','Połącz fragmenty')">
+          <span class="li-text">7. Połącz fragmenty</span>
+          <span class="li-arrow">›</span>
+        </div>
+        <div class="list-item" onclick="navigateTo('screen-reading-8','Uzupełnij tekst, wybierając słowa')">
+          <span class="li-text">8. Uzupełnij tekst, wybierając słowa</span>
+          <span class="li-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 1: Dopasuj odpowiedzi do fragmentu -->
+    <div class="screen" id="screen-reading-1">
+      <div class="screen-scroll">
+        <div class="section-title">Dopasuj odpowiedzi do fragmentu</div>
+        <div class="exercise-instruction">
+          Proszę przeczytać fragmenty tekstów i zgodnie z przykładem zaznaczyć właściwą odpowiedź.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span></div>
+          <div class="exercise-text">
+            W Polsce Wielkanoc to jedno z najważniejszych świąt. Rodziny spotykają się przy wspólnym stole
+            i dzielą jajkiem. Tradycyjnym daniem jest żurek i biała kiełbasa.
+          </div>
+          <div class="mb-8"><strong>Z tego tekstu wynika, że:</strong></div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="r1ex" disabled> Wielkanoc obchodzi się tylko w kościele</label>
+            <label class="radio-option"><input type="radio" name="r1ex" disabled> Polacy jedzą żurek na Boże Narodzenie</label>
+            <label class="radio-option correct-selected"><input type="radio" name="r1ex" checked disabled> Wielkanoc to ważne święto rodzinne</label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong></div>
+          <div class="exercise-text">
+            Kraków jest jednym z najstarszych miast w Polsce. Co roku odwiedza go ponad 10 milionów turystów.
+            Największą atrakcją jest Rynek Główny z Sukiennicami.
+          </div>
+          <div class="mb-8"><strong>Z tego tekstu wynika, że:</strong></div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="r1q1"> Kraków jest mało popularny wśród turystów</label>
+            <label class="radio-option"><input type="radio" name="r1q1"> Rynek Główny przyciąga wielu odwiedzających</label>
+            <label class="radio-option"><input type="radio" name="r1q1"> Sukiennice to nowy budynek</label>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 2: Dopasuj odpowiedzi do sytuacji -->
+    <div class="screen" id="screen-reading-2">
+      <div class="screen-scroll">
+        <div class="section-title">Dopasuj odpowiedzi do sytuacji</div>
+        <div class="exercise-instruction">
+          Po przeczytaniu podanych napisów proszę zaznaczyć właściwą odpowiedź.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span> <strong>„Uwaga! Mokra podłoga"</strong></div>
+          <div class="mb-8">Ten napis można zobaczyć:</div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="r2ex" disabled> w restauracji</label>
+            <label class="radio-option"><input type="radio" name="r2ex" disabled> na lotnisku</label>
+            <label class="radio-option correct-selected"><input type="radio" name="r2ex" checked disabled> w centrum handlowym</label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong> <strong>„Proszę nie dotykać eksponatów"</strong></div>
+          <div class="mb-8">Ten napis można zobaczyć:</div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="r2q1"> w muzeum</label>
+            <label class="radio-option"><input type="radio" name="r2q1"> w aptece</label>
+            <label class="radio-option"><input type="radio" name="r2q1"> na dworcu</label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>2.</strong> <strong>„Godziny otwarcia: pon-pt 8:00-16:00"</strong></div>
+          <div class="mb-8">Ten napis można zobaczyć:</div>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="r2q2"> w banku</label>
+            <label class="radio-option"><input type="radio" name="r2q2"> w klubie nocnym</label>
+            <label class="radio-option"><input type="radio" name="r2q2"> na plaży</label>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 3: Prawda / Fałsz -->
+    <div class="screen" id="screen-reading-3">
+      <div class="screen-scroll">
+        <div class="section-title">Prawda / Fałsz</div>
+        <div class="exercise-instruction">
+          Proszę przeczytać tekst i zaznaczyć zdania prawdziwe (P) lub fałszywe (F).
+        </div>
+
+        <div class="card mb-20">
+          <div class="exercise-text">
+            Tomek mieszka w Warszawie od pięciu lat. Pracuje jako programista w dużej firmie technologicznej.
+            Codziennie dojeżdża do pracy metrem, bo jego biuro znajduje się w centrum miasta.
+            Po pracy często chodzi na siłownię lub spotyka się z przyjaciółmi w kawiarni.
+            W weekendy lubi jeździć na rowerze po parkach. Tomek planuje przeprowadzkę do większego mieszkania,
+            bo jego obecne jest za małe.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="pf-row">
+            <div class="pf-text"><span class="example-badge">Przykład</span> Tomek mieszka w Krakowie.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf0" disabled></label>
+              <label>F <input type="radio" name="pf0" checked disabled></label>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-text"><strong>1.</strong> Tomek pracuje w branży IT.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf1"></label>
+              <label>F <input type="radio" name="pf1"></label>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-text"><strong>2.</strong> Do pracy jeździ samochodem.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf2"></label>
+              <label>F <input type="radio" name="pf2"></label>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-text"><strong>3.</strong> Po pracy chodzi na basen.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf3"></label>
+              <label>F <input type="radio" name="pf3"></label>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-text"><strong>4.</strong> W weekendy jeździ na rowerze.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf4"></label>
+              <label>F <input type="radio" name="pf4"></label>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div class="pf-text"><strong>5.</strong> Jest zadowolony ze swojego mieszkania.</div>
+            <div class="pf-options">
+              <label>P <input type="radio" name="pf5"></label>
+              <label>F <input type="radio" name="pf5"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 4: Ułóż fragmenty -->
+    <div class="screen" id="screen-reading-4">
+      <div class="screen-scroll">
+        <div class="section-title">Ułóż fragmenty w logiczną całość</div>
+        <div class="exercise-instruction">
+          Proszę poukładać podane fragmenty tekstu w logiczną całość.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span></div>
+          <div class="exercise-text"><strong>1.</strong> W sobotę rano Anna postanowiła zorganizować przyjęcie urodzinowe.</div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-zone-label" id="dropLabel">Przeciągnij i umieść tutaj wszystkie fragmenty tekstu w poprawnej kolejności</div>
+        </div>
+
+        <div class="drag-items-container" id="dragContainer">
+          <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Najpierw pojechała do supermarketu po zakupy.</div>
+          <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Potem przez dwie godziny gotowała i dekorowała tort.</div>
+          <div class="drag-item" draggable="true" ondragstart="dragStart(event)">Wieczorem przyszli wszyscy goście i świętowali do późna.</div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie kolejności...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 5: Uzupełnij tekst fragmentami -->
+    <div class="screen" id="screen-reading-5">
+      <div class="screen-scroll">
+        <div class="section-title">Uzupełnij tekst fragmentami</div>
+        <div class="exercise-instruction">
+          Proszę przeczytać tekst i zgodnie z przykładem dopasować usunięte z niego fragmenty.
+          Uwaga – fragmentów jest więcej niż potrzeba.
+        </div>
+
+        <div class="card mb-16">
+          <div class="exercise-text">
+            Transport publiczny w polskich miastach rozwija się bardzo dynamicznie.
+            W Warszawie działa metro, <span class="answer-filled"><span class="example-badge">Przykład</span> które ma dwie linie</span>.
+            Tramwaje kursują regularnie, {1} _______________. Wiele osób korzysta też z autobusów miejskich,
+            {2} _______________. Coraz większą popularnością cieszą się rowery miejskie,
+            {3} _______________. W Krakowie władze planują budowę nowej linii tramwajowej,
+            {4} _______________. Nowoczesne rozwiązania transportowe pomagają zmniejszyć korki,
+            {5} _______________.
+          </div>
+        </div>
+
+        <div class="section-subtitle">Fragmenty do wstawienia:</div>
+        <div class="drag-items-container">
+          <div class="drag-item">A. które są tańsze niż taksówki</div>
+          <div class="drag-item">B. szczególnie w godzinach szczytu</div>
+          <div class="drag-item">C. które łączą wszystkie dzielnice</div>
+          <div class="drag-item">D. która połączy centrum z przedmieściami</div>
+          <div class="drag-item">E. dostępne na stacjach w całym mieście</div>
+          <div class="drag-item">F. co przyczynia się do poprawy jakości powietrza</div>
+          <div class="drag-item">G. ponieważ bilety są zbyt drogie</div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 6: Uzupełnij tekst słowami -->
+    <div class="screen" id="screen-reading-6">
+      <div class="screen-scroll">
+        <div class="section-title">Uzupełnij tekst słowami</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst słowami z ramki zgodnie z podanym przykładem. Uwaga – słów jest więcej niż potrzeba.
+        </div>
+
+        <div class="word-bank">
+          <span class="word-bank-item">codziennie</span>
+          <span class="word-bank-item">owoce</span>
+          <span class="word-bank-item">spacer</span>
+          <span class="word-bank-item">woda</span>
+          <span class="word-bank-item">sen</span>
+          <span class="word-bank-item">stres</span>
+          <span class="word-bank-item">dieta</span>
+          <span class="word-bank-item">energia</span>
+          <span class="word-bank-item">ćwiczenia</span>
+          <span class="word-bank-item">witaminy</span>
+          <span class="word-bank-item">lekarz</span>
+        </div>
+
+        <div class="card">
+          <div class="section-subtitle" style="margin-bottom:8px"><strong>Zdrowy styl życia</strong></div>
+          <div class="exercise-text">
+            Zdrowy styl życia zaczyna się od dobrej diety. Lekarze zalecają, żeby jeść dużo warzyw i
+            <span class="answer-filled"><span class="example-badge">Przykład</span> owoców</span>
+            każdego dnia. Ważne jest także picie odpowiedniej ilości
+            <input class="gap-input" placeholder="1. ___">. Regularne
+            <input class="gap-input" placeholder="2. ___"> fizyczne pomagają utrzymać dobrą formę.
+            Nawet krótki <input class="gap-input" placeholder="3. ___"> po obiedzie może poprawić samopoczucie.
+            Nie wolno zapominać o odpowiednim <input class="gap-input" placeholder="4. ___"> — dorośli potrzebują
+            około siedmiu godzin snu. Ważne jest też unikanie <input class="gap-input" placeholder="5. ___">,
+            który negatywnie wpływa na zdrowie. Dbając o te elementy <input class="gap-input" placeholder="6. ___">,
+            można mieć więcej <input class="gap-input" placeholder="7. ___"> i cieszyć się lepszym zdrowiem.
+            Warto też regularnie odwiedzać <input class="gap-input" placeholder="8. ___">,
+            żeby kontrolować stan swojego organizmu.
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 7: Połącz fragmenty -->
+    <div class="screen" id="screen-reading-7">
+      <div class="screen-scroll">
+        <div class="section-title">Połącz fragmenty</div>
+        <div class="exercise-instruction">
+          Proszę zgodnie z przykładem połączyć fragmenty tekstów z odpowiednimi tytułami.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span></div>
+          <div class="exercise-text">
+            „Naprawiam komputery, instaluję programy i pomagam w problemach z Internetem.
+            Dojazd do klienta gratis." → <span class="answer-filled">Informatyk</span>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong></div>
+          <div class="exercise-text mb-8">
+            „Prowadzę zajęcia fitness i układam indywidualne plany treningowe.
+            Zapraszam na pierwsze spotkanie bezpłatne."
+          </div>
+          <div>Tytuł: <input class="gap-input wide" placeholder="___"></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>2.</strong></div>
+          <div class="exercise-text mb-8">
+            „Oferuję lekcje gry na gitarze i pianinie dla początkujących i zaawansowanych.
+            Przygotowuję również do egzaminów muzycznych."
+          </div>
+          <div>Tytuł: <input class="gap-input wide" placeholder="___"></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>3.</strong></div>
+          <div class="exercise-text mb-8">
+            „Tłumaczę dokumenty z języka angielskiego i niemieckiego.
+            Specjalizuję się w tekstach prawniczych i medycznych."
+          </div>
+          <div>Tytuł: <input class="gap-input wide" placeholder="___"></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>4.</strong></div>
+          <div class="exercise-text mb-8">
+            „Projektuję ogrody i balkony. Doradzam w doborze roślin
+            odpowiednich do polskiego klimatu."
+          </div>
+          <div>Tytuł: <input class="gap-input wide" placeholder="___"></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>5.</strong></div>
+          <div class="exercise-text mb-8">
+            „Organizuję wesela, urodziny i imprezy firmowe.
+            Zajmuję się dekoracją, cateringiem i muzyką."
+          </div>
+          <div>Tytuł: <input class="gap-input wide" placeholder="___"></div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING 8: Uzupełnij tekst, wybierając słowa -->
+    <div class="screen" id="screen-reading-8">
+      <div class="screen-scroll">
+        <div class="section-title">Uzupełnij tekst, wybierając słowa</div>
+        <div class="exercise-instruction">
+          Proszę zgodnie z przykładem wybrać najlepszą spośród możliwości podanych w nawiasach.
+        </div>
+
+        <div class="card">
+          <div class="section-subtitle" style="margin-bottom:8px"><strong>Sport i rekreacja</strong></div>
+          <div class="exercise-text">
+            Sport odgrywa ważną rolę w życiu wielu Polaków. Najpopularniejszym sportem jest piłka
+            <span class="answer-filled"><span class="example-badge">Przykład</span> nożna</span>
+            (nożna / ręczna / siatkowa). Wielu ludzi regularnie
+            <select class="gap-input" style="width:auto"><option value="">1. ___</option><option>biega</option><option>stoi</option><option>siedzi</option></select>
+            w parkach i nad rzekami. Jazda na
+            <select class="gap-input" style="width:auto"><option value="">2. ___</option><option>rowerze</option><option>koniu</option><option>desce</option></select>
+            jest coraz bardziej popularna w miastach. Zimą Polacy lubią jeździć na
+            <select class="gap-input" style="width:auto"><option value="">3. ___</option><option>nartach</option><option>łyżwach</option><option>sankach</option></select>
+            w Zakopanem. Siłownie i kluby fitness przyciągają osoby,
+            które chcą zadbać o swoją
+            <select class="gap-input" style="width:auto"><option value="">4. ___</option><option>kondycję</option><option>pracę</option><option>kuchnię</option></select>.
+            Pływanie jest świetnym sposobem na
+            <select class="gap-input" style="width:auto"><option value="">5. ___</option><option>relaks</option><option>naukę</option><option>gotowanie</option></select>
+            i poprawę zdrowia. Coraz więcej osób wybiera także
+            <select class="gap-input" style="width:auto"><option value="">6. ___</option><option>jogę</option><option>szachy</option><option>gotowanie</option></select>
+            jako formę aktywności fizycznej. Specjaliści zalecają minimum trzydzieści
+            <select class="gap-input" style="width:auto"><option value="">7. ___</option><option>minut</option><option>godzin</option><option>dni</option></select>
+            ruchu dziennie. Regularne ćwiczenia pomagają w redukcji
+            <select class="gap-input" style="width:auto"><option value="">8. ___</option><option>stresu</option><option>pieniędzy</option><option>czasu</option></select>
+            i poprawiają samopoczucie.
+          </div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR MAIN -->
+    <div class="screen" id="screen-ex-grammar">
+      <div class="screen-scroll">
+        <div class="section-title">Gramatyka</div>
+
+        <div class="grammar-banner errors" onclick="alert('Ta funkcja wymaga analizy Twoich wcześniejszych odpowiedzi.')">
+          <div class="grammar-banner-title">Ćwiczenia na podstawie błędów</div>
+          <div class="grammar-banner-desc">Przeanalizujemy Twoje błędy i na ich podstawie otrzymasz zadania, które pozwolą Ci się doskonalić.</div>
+        </div>
+
+        <div class="grammar-banner topics" onclick="navigateTo('screen-grammar-topics','Ćwiczenia według tematów')">
+          <div class="grammar-banner-title">Ćwiczenia według tematów</div>
+          <div class="grammar-banner-desc">Ćwicz co chcesz – wybieraj wśród zagadnień gramatycznych.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR TOPICS LIST -->
+    <div class="screen" id="screen-grammar-topics">
+      <div class="screen-scroll">
+        <div class="section-title">Ćwiczenia według tematów</div>
+        <div class="list-item" onclick="navigateTo('screen-gram-1','Odmiana rzeczownika i przymiotnika')"><span class="li-text">1. Odmiana rzeczownika i przymiotnika</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-2','Stopniowanie')"><span class="li-text">2. Stopniowanie przymiotników i przysłówków</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-3','Czas teraźniejszy i przyszły')"><span class="li-text">3. Czas teraźniejszy i przyszły</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-4','Czas przeszły')"><span class="li-text">4. Czas przeszły</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-5','Czas teraźniejszy i przeszły')"><span class="li-text">5. Czas teraźniejszy i przeszły</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-6','Aspekt czasownika')"><span class="li-text">6. Aspekt czasownika</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-7','Aspekt i tryby czasownika')"><span class="li-text">7. Aspekt i tryby czasownika</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-8','Tryb rozkazujący')"><span class="li-text">8. Tryb rozkazujący</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-9','Tryb przypuszczający')"><span class="li-text">9. Tryb przypuszczający</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-10','Zaimki osobowe')"><span class="li-text">10. Zaimki osobowe</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-11','Przyimki')"><span class="li-text">11. Przyimki</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-12','Spójniki')"><span class="li-text">12. Spójniki</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-13','Pełna odmiana')"><span class="li-text">13. Pełna odmiana</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-14','Liczebniki')"><span class="li-text">14. Liczebniki</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-15','Zadawanie pytań')"><span class="li-text">15. Zadawanie pytań</span><span class="li-arrow">›</span></div>
+        <div class="list-item" onclick="navigateTo('screen-gram-16','Transformacje zdań')"><span class="li-text">16. Transformacje zdań</span><span class="li-arrow">›</span></div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 1: Odmiana rzeczownika i przymiotnika -->
+    <div class="screen" id="screen-gram-1">
+      <div class="screen-scroll">
+        <div class="section-title">Odmiana rzeczownika i przymiotnika</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst poprawną formą wyrazów w nawiasach zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            W zeszłym tygodniu odwiedziłam swoją <span class="answer-filled"><span class="example-badge">Przykład</span> babcię</span> (babcia).
+            Mieszka w małym <input class="gap-input" placeholder="___"> (miasto) nad <input class="gap-input" placeholder="___"> (morze).
+            Zabrała mnie na spacer po <input class="gap-input" placeholder="___"> (plaża) i do <input class="gap-input" placeholder="___"> (kościół).
+            Wieczorem jedliśmy pyszną kolację z <input class="gap-input" placeholder="___"> (świeży) <input class="gap-input" placeholder="___"> (ryba).
+            Opowiadała mi o swoich <input class="gap-input" placeholder="___"> (dawny) <input class="gap-input" placeholder="___"> (podróż).
+            Bardzo lubię spędzać czas z moją <input class="gap-input" placeholder="___"> (kochany) <input class="gap-input" placeholder="___"> (babcia).
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 2: Stopniowanie -->
+    <div class="screen" id="screen-gram-2">
+      <div class="screen-scroll">
+        <div class="section-title">Stopniowanie przymiotników i przysłówków</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst poprawną formą wyrazów podanych w nawiasach zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            Warszawa jest <span class="answer-filled"><span class="example-badge">Przykład</span> większa</span> (duży) niż Lublin.
+            Kraków jest <input class="gap-input" placeholder="___"> (stary) niż Gdańsk.
+            W górach jest <input class="gap-input" placeholder="___"> (zimno) niż nad morzem.
+            Mój brat biega <input class="gap-input" placeholder="___"> (szybko) niż ja.
+            Ta restauracja jest <input class="gap-input" placeholder="___"> (dobry) niż tamta.
+            Dzisiaj jest <input class="gap-input" placeholder="___"> (ciepło) niż wczoraj.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 3: Czas teraźniejszy i przyszły -->
+    <div class="screen" id="screen-gram-3">
+      <div class="screen-scroll">
+        <div class="section-title">Czas teraźniejszy i przyszły</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst czasownikami w czasie teraźniejszym lub przyszłym prostym zgodnie z podanym przykładem.
+          <br><strong>!!! (Uwaga: proszę używać TYLKO bezokoliczników)</strong>
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            W każdy poniedziałek Marta <span class="answer-filled"><span class="example-badge">Przykład</span> chodzi</span> (chodzić) na kurs języka polskiego.
+            Jutro <input class="gap-input" placeholder="___"> (jechać) do Gdańska, a potem <input class="gap-input" placeholder="___"> (zwiedzać) Stare Miasto.
+            Jej przyjaciel <input class="gap-input" placeholder="___"> (mieszkać) tam od roku.
+            Razem <input class="gap-input" placeholder="___"> (jeść) obiad w nowej restauracji.
+            Wieczorem <input class="gap-input" placeholder="___"> (wracać) pociągiem do Warszawy.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 4: Czas przeszły -->
+    <div class="screen" id="screen-gram-4">
+      <div class="screen-scroll">
+        <div class="section-title">Czas przeszły</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst czasownikami w czasie przeszłym zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            Wczoraj Kasia <span class="answer-filled"><span class="example-badge">Przykład</span> wstała</span> (wstać) bardzo wcześnie.
+            <input class="gap-input" placeholder="___"> (Pojechać) na dworzec i <input class="gap-input" placeholder="___"> (kupić) bilet do Wrocławia.
+            W pociągu <input class="gap-input" placeholder="___"> (czytać) książkę i <input class="gap-input" placeholder="___"> (słuchać) muzyki.
+            Na miejscu <input class="gap-input" placeholder="___"> (spotkać) się z koleżanką.
+            Razem <input class="gap-input" placeholder="___"> (zwiedzić) zoo i <input class="gap-input" placeholder="___"> (zjeść) lody w parku.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 5: Czas teraźniejszy i przeszły -->
+    <div class="screen" id="screen-gram-5">
+      <div class="screen-scroll">
+        <div class="section-title">Czas teraźniejszy i przeszły</div>
+        <div class="exercise-instruction">
+          Proszę – zgodnie z przykładami – uzupełnić tekst poprawnymi formami wyrazów podanych w nawiasach (czas teraźniejszy i przeszły).
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            Teraz Anna <span class="answer-filled"><span class="example-badge">Przykład</span> pracuje</span> (pracować) w biurze.
+            Wczoraj <input class="gap-input" placeholder="___"> (sprzątać) mieszkanie i <input class="gap-input" placeholder="___"> (gotować) obiad.
+            Dziś <input class="gap-input" placeholder="___"> (planować) wyjście do kina.
+            Ostatnio <input class="gap-input" placeholder="___"> (zacząć) uczyć się hiszpańskiego.
+            Co wieczór <input class="gap-input" placeholder="___"> (oglądać) seriale i <input class="gap-input" placeholder="___"> (pić) herbatę.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 6: Aspekt czasownika -->
+    <div class="screen" id="screen-gram-6">
+      <div class="screen-scroll">
+        <div class="section-title">Aspekt czasownika</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst właściwą formą jednego z czasowników w nawiasach zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            W sobotę <span class="answer-filled"><span class="example-badge">Przykład</span> wybrałem się</span> (wybierać się / wybrać się) na zakupy.
+            Mama <input class="gap-input wide" placeholder="___"> (prosić / poprosić) mnie o chleb i mleko.
+            Długo <input class="gap-input wide" placeholder="___"> (szukać / poszukać) dobrej oferty.
+            W końcu <input class="gap-input wide" placeholder="___"> (kupować / kupić) wszystko
+            i <input class="gap-input wide" placeholder="___"> (wracać / wrócić) do domu.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 7: Aspekt i tryby czasownika -->
+    <div class="screen" id="screen-gram-7">
+      <div class="screen-scroll">
+        <div class="section-title">Aspekt i tryby czasownika</div>
+        <div class="exercise-instruction">
+          Proszę wybrać poprawną formę wyrazów podanych w nawiasach (aspekt i tryby).
+        </div>
+        <div class="card">
+          <div class="exercise-text" style="line-height:2.2">
+            <strong>Ola:</strong> Hej! Wiesz, że jutro <span class="answer-filled"><span class="example-badge">Przykład</span> muszę</span> kupić prezent dla mamy?<br>
+            <strong>Paweł:</strong> Tak, może <input class="gap-input" placeholder="___"> (pojechać / jechać) razem do centrum?<br>
+            <strong>Ola:</strong> Świetny pomysł! Chciałabym <input class="gap-input" placeholder="___"> (kupować / kupić) jej nowy szalik.<br>
+            <strong>Paweł:</strong> A może <input class="gap-input" placeholder="___"> (wybrać / wybierać) coś innego? Na przykład książkę?<br>
+            <strong>Ola:</strong> Nie, mama ostatnio <input class="gap-input" placeholder="___"> (mówić / powiedzieć), że potrzebuje ciepłego szalika.<br>
+            <strong>Paweł:</strong> Dobrze, to <input class="gap-input" placeholder="___"> (szukać / poszukać) czegoś ładnego w galerii.<br>
+            <strong>Ola:</strong> Super! <input class="gap-input" placeholder="___"> (Spotykać / Spotkajmy) się o trzeciej pod wejściem.<br>
+            <strong>Paweł:</strong> Umówione! Nie <input class="gap-input" placeholder="___"> (spóźniać / spóźnij) się!<br>
+            <strong>Ola:</strong> Obiecuję, że <input class="gap-input" placeholder="___"> (przychodzić / przyjdę) punktualnie.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 8: Tryb rozkazujący -->
+    <div class="screen" id="screen-gram-8">
+      <div class="screen-scroll">
+        <div class="section-title">Tryb rozkazujący</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst właściwą formą czasowników w nawiasach w trybie rozkazującym.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            <span class="answer-filled"><span class="example-badge">Przykład</span> Pokrój</span> (pokroić) warzywa na małe kawałki.
+            <input class="gap-input" placeholder="___"> (Dodać) łyżkę oliwy na patelnię.
+            <input class="gap-input" placeholder="___"> (Wymieszać) wszystko dokładnie.
+            <input class="gap-input" placeholder="___"> (Nie zapomnieć) o przyprawach!
+            <input class="gap-input" placeholder="___"> (Smażyć) na małym ogniu przez pięć minut.
+            <input class="gap-input" placeholder="___"> (Podać) na ciepłym talerzu.
+            <input class="gap-input" placeholder="___"> (Posypać) świeżą pietruszką i <input class="gap-input" placeholder="___"> (podać) do stołu.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 9: Tryb przypuszczający -->
+    <div class="screen" id="screen-gram-9">
+      <div class="screen-scroll">
+        <div class="section-title">Tryb przypuszczający</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst, wpisując poprawne formy czasowników w trybie przypuszczającym, zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            <span class="answer-filled"><span class="example-badge">Przykład</span> Gdybym miała</span> (ja – gdyby mieć) więcej czasu,
+            <input class="gap-input wide" placeholder="___"> (uczyć się) gry na gitarze.
+            Mój kolega <input class="gap-input wide" placeholder="___"> (chcieć) pojechać do Japonii.
+            <input class="gap-input wide" placeholder="___"> (Kupić) tam dużo pamiątek.
+            Gdybyśmy <input class="gap-input wide" placeholder="___"> (znać) język japoński,
+            <input class="gap-input wide" placeholder="___"> (rozmawiać) z mieszkańcami.
+            A ty, co <input class="gap-input wide" placeholder="___"> (robić), gdybyś miał więcej wolnego czasu?
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 10: Zaimki osobowe -->
+    <div class="screen" id="screen-gram-10">
+      <div class="screen-scroll">
+        <div class="section-title">Zaimki osobowe</div>
+        <div class="exercise-instruction">
+          Proszę wybrać poprawną formę wyrazu zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text" style="line-height:2.4">
+            <strong>1.</strong> Piotr rozmawia z <span class="answer-filled"><span class="example-badge">Przykład</span> jego</span> kolegą o planach.<br>
+            <strong>2.</strong> Ona zabrała <input class="gap-input" placeholder="___"> torebkę i wyszła.<br>
+            <strong>3.</strong> My poszliśmy do <input class="gap-input" placeholder="___"> nowego mieszkania.<br>
+            <strong>4.</strong> Czy widziałeś <input class="gap-input" placeholder="___"> wczoraj w sklepie?<br>
+            <strong>5.</strong> Dałam <input class="gap-input" placeholder="___"> książkę, którą chciałaś.<br>
+            <strong>6.</strong> Oni zaprosili <input class="gap-input" placeholder="___"> na kolację.<br>
+            <strong>7.</strong> Spotkaliśmy <input class="gap-input" placeholder="___"> przypadkiem na ulicy.<br>
+            <strong>8.</strong> To jest prezent dla <input class="gap-input" placeholder="___">.<br>
+            <strong>9.</strong> Czy mogę <input class="gap-input" placeholder="___"> o coś zapytać?<br>
+            <strong>10.</strong> Powiedz <input class="gap-input" placeholder="___">, żeby przyszedł wcześniej.<br>
+            <strong>11.</strong> Chcę z <input class="gap-input" placeholder="___"> porozmawiać o wakacjach.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 11: Przyimki -->
+    <div class="screen" id="screen-gram-11">
+      <div class="screen-scroll">
+        <div class="section-title">Przyimki</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst wyrazami z ramki zgodnie z podanym przykładem.
+          Uwaga! Niektóre wyrazy mogą być użyte więcej niż jeden raz.
+        </div>
+        <div class="word-bank">
+          <span class="word-bank-item">do</span>
+          <span class="word-bank-item">w</span>
+          <span class="word-bank-item">na</span>
+          <span class="word-bank-item">z</span>
+          <span class="word-bank-item">po</span>
+          <span class="word-bank-item">od</span>
+          <span class="word-bank-item">dla</span>
+          <span class="word-bank-item">o</span>
+          <span class="word-bank-item">przed</span>
+          <span class="word-bank-item">przy</span>
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            W weekend pojechaliśmy <span class="answer-filled"><span class="example-badge">Przykład</span> do</span> Zakopanego.
+            Zatrzymaliśmy się <input class="gap-input" placeholder="___"> małym pensjonacie <input class="gap-input" placeholder="___"> centrum.
+            Rano poszliśmy <input class="gap-input" placeholder="___"> spacer <input class="gap-input" placeholder="___"> Krupówkach.
+            Kupiliśmy oscypki <input class="gap-input" placeholder="___"> straganie i pamiątki <input class="gap-input" placeholder="___"> rodziny.
+            <input class="gap-input" placeholder="___"> obiedzie jedliśmy <input class="gap-input" placeholder="___"> restauracji góralską kuchnię.
+            Wieczorem wróciliśmy <input class="gap-input" placeholder="___"> pensjonatu zmęczeni, ale zadowoleni.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 12: Spójniki -->
+    <div class="screen" id="screen-gram-12">
+      <div class="screen-scroll">
+        <div class="section-title">Spójniki</div>
+        <div class="exercise-instruction">
+          Proszę uzupełnić tekst wyrazami z ramki zgodnie z podanym przykładem.
+          Uwaga! Niektóre wyrazy mogą być użyte dwa razy, a niektóre wcale.
+        </div>
+        <div class="word-bank">
+          <span class="word-bank-item">jednak</span>
+          <span class="word-bank-item">czy</span>
+          <span class="word-bank-item">bo</span>
+          <span class="word-bank-item">ale</span>
+          <span class="word-bank-item">i</span>
+          <span class="word-bank-item">a</span>
+          <span class="word-bank-item">albo</span>
+          <span class="word-bank-item">chociaż</span>
+          <span class="word-bank-item">żeby</span>
+          <span class="word-bank-item">że</span>
+          <span class="word-bank-item">więc</span>
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            Rano wstaję wcześnie, <span class="answer-filled"><span class="example-badge">Przykład</span> ale</span> nie lubię tego.
+            Jem śniadanie <input class="gap-input" placeholder="___"> piję kawę.
+            Potem jadę do pracy, <input class="gap-input" placeholder="___"> mój autobus odjeżdża o siódmej.
+            Mój kolega twierdzi, <input class="gap-input" placeholder="___"> kawa jest niezdrowa,
+            <input class="gap-input" placeholder="___"> ja się z nim nie zgadzam.
+            Nie wiem, <input class="gap-input" placeholder="___"> jutro pójdę na siłownię
+            <input class="gap-input" placeholder="___"> na basen.
+            <input class="gap-input" placeholder="___"> pada deszcz, zawsze biorę parasol.
+            Uczę się polskiego, <input class="gap-input" placeholder="___"> zdać egzamin B1.
+            Nauka jest trudna, <input class="gap-input" placeholder="___"> nie podaję się.
+            Muszę więcej ćwiczyć, <input class="gap-input" placeholder="___"> zapisałem się na kurs.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 13: Pełna odmiana -->
+    <div class="screen" id="screen-gram-13">
+      <div class="screen-scroll">
+        <div class="section-title">Pełna odmiana</div>
+        <div class="exercise-instruction">
+          Proszę wybrać poprawne formy wyrazów podanych w nawiasach (odmiana rzeczowników, przymiotników i zaimków).
+        </div>
+        <div class="card">
+          <div class="exercise-text">
+            W niedzielę moja rodzina spotkała się na <span class="answer-filled"><span class="example-badge">Przykład</span> wspólnym</span> (wspólny) obiedzie.
+            Mama przygotowała pyszną zupę z <input class="gap-input" placeholder="___"> (świeży) <input class="gap-input" placeholder="___"> (pomidor).
+            Tata przyniósł ciasto od <input class="gap-input" placeholder="___"> (nasz) <input class="gap-input" placeholder="___"> (ulubiony) cukiernika.
+            Siostra rozmawiała z <input class="gap-input" placeholder="___"> (mój) <input class="gap-input" placeholder="___"> (młodszy) bratem o szkole.
+            Babcia opowiadała o <input class="gap-input" placeholder="___"> (dawny) <input class="gap-input" placeholder="___"> (czas).
+            Po obiedzie poszliśmy na spacer do <input class="gap-input" placeholder="___"> (najbliższy) parku.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 14: Liczebniki -->
+    <div class="screen" id="screen-gram-14">
+      <div class="screen-scroll">
+        <div class="section-title">Liczebniki</div>
+        <div class="exercise-instruction">
+          Proszę wybrać poprawną formę wyrazu zgodnie z podanym przykładem.
+        </div>
+        <div class="card">
+          <div class="exercise-text" style="line-height:2.4">
+            Mamy <span class="answer-filled"><span class="example-badge">Przykład</span> trzy</span> pokoje: sypialnię, salon i gabinet.<br>
+            W kuchni stoi <input class="gap-input" placeholder="___"> (sześć) krzeseł.<br>
+            Na półce leży <input class="gap-input" placeholder="___"> (dwanaście) książek.<br>
+            W naszym domu mieszka <input class="gap-input" placeholder="___"> (pięć) osób.<br>
+            Mam <input class="gap-input" placeholder="___"> (dwa) koty i <input class="gap-input" placeholder="___"> (jeden) psa.<br>
+            Kupiłam <input class="gap-input" placeholder="___"> (cztery) bilety do kina.<br>
+            Na przyjęciu było <input class="gap-input" placeholder="___"> (dwadzieścia) gości.
+          </div>
+        </div>
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 15: Zadawanie pytań -->
+    <div class="screen" id="screen-gram-15">
+      <div class="screen-scroll">
+        <div class="section-title">Zadawanie pytań</div>
+        <div class="exercise-instruction">
+          Proszę – zgodnie z przykładem – zapytać o podkreśloną część zdania.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span></div>
+          <div class="exercise-text">
+            <span class="underline-text"><strong>Maria</strong></span> jest moją sąsiadką.
+            → <span class="answer-filled">Kto</span> jest twoją sąsiadką?
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong></div>
+          <div class="exercise-text mb-8">
+            Spotkamy się <span class="underline-text"><strong>w piątek</strong></span>.
+          </div>
+          <div><input class="gap-input wide" placeholder="___"> się spotkacie? &nbsp;→&nbsp; w piątek</div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>2.</strong></div>
+          <div class="exercise-text mb-8">
+            Kupiłam <span class="underline-text"><strong>nową sukienkę</strong></span>.
+          </div>
+          <div><input class="gap-input wide" placeholder="___"> kupiłaś? &nbsp;→&nbsp; nową sukienkę</div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>3.</strong></div>
+          <div class="exercise-text mb-8">
+            Jadę <span class="underline-text"><strong>do Poznania</strong></span>.
+          </div>
+          <div><input class="gap-input wide" placeholder="___"> jedziesz? &nbsp;→&nbsp; do Poznania</div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>4.</strong></div>
+          <div class="exercise-text mb-8">
+            Ten sweter kosztuje <span class="underline-text"><strong>sto złotych</strong></span>.
+          </div>
+          <div><input class="gap-input wide" placeholder="___"> kosztuje ten sweter? &nbsp;→&nbsp; sto złotych</div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAMMAR 16: Transformacje zdań -->
+    <div class="screen" id="screen-gram-16">
+      <div class="screen-scroll">
+        <div class="section-title">Transformacje zdań</div>
+        <div class="exercise-instruction">
+          Proszę – zgodnie z przykładem – użyć wyrazu w nawiasie i przekształcić zdanie tak, by miało ten sam sens.
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><span class="example-badge">Przykład</span></div>
+          <div class="exercise-text">
+            Wszystkie dzieci poszły na plac zabaw oprócz Ani. (tylko)<br>
+            → <span class="answer-filled">Na plac zabaw nie poszła tylko Ania.</span>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>1.</strong></div>
+          <div class="exercise-text mb-8">
+            Podała herbatę i ciastko. (zarówno, jak i)
+          </div>
+          <div>→ <input class="gap-input xwide" placeholder="Wpisz przekształcone zdanie..."></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>2.</strong></div>
+          <div class="exercise-text mb-8">
+            Nie mamy wolnego czasu na spacer. (Nikt)
+          </div>
+          <div>→ <input class="gap-input xwide" placeholder="Wpisz przekształcone zdanie..."></div>
+        </div>
+
+        <div class="question-block">
+          <div class="mb-8"><strong>3.</strong></div>
+          <div class="exercise-text mb-8">
+            Każdy sklep był zamknięty w niedzielę. (Żaden)
+          </div>
+          <div>→ <input class="gap-input xwide" placeholder="Wpisz przekształcone zdanie..."></div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Sprawdzanie odpowiedzi...')">Sprawdź</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WRITING: Set selection -->
+    <div class="screen" id="screen-ex-writing">
+      <div class="screen-scroll">
+        <div class="section-title">Pisanie</div>
+        <div class="exercise-instruction">
+          Uwaga! Wybierz jeden zestaw i zrób oba zadania (a i b) z tego zestawu.
+        </div>
+
+        <div class="card set-card">
+          <div class="set-title">Zestaw 1</div>
+          <div class="set-task"><strong>Zadanie A:</strong> Proszę napisać zaproszenie na grilla z okazji Twoich urodzin. Podaj miejsce, datę i godzinę. (30 słów)</div>
+          <div class="set-task"><strong>Zadanie B:</strong> Proszę napisać list do przyjaciela, w którym opisujesz swoje wakacje w polskich górach. Co robiłeś/robiłaś? Co Ci się podobało? (170 słów)</div>
+          <div class="mt-12"><button class="btn-primary" onclick="openWritingScreen(1)">Wybierz</button></div>
+        </div>
+
+        <div class="card set-card">
+          <div class="set-title">Zestaw 2</div>
+          <div class="set-task"><strong>Zadanie A:</strong> Proszę napisać wiadomość do sąsiada z przeprosinami za głośną muzykę w weekend. (25 słów)</div>
+          <div class="set-task"><strong>Zadanie B:</strong> Proszę napisać recenzję restauracji, w której ostatnio byłeś/byłaś. Opisz jedzenie, obsługę i atmosferę. (175 słów)</div>
+          <div class="mt-12"><button class="btn-primary" onclick="openWritingScreen(2)">Wybierz</button></div>
+        </div>
+
+        <div class="card set-card">
+          <div class="set-title">Zestaw 3</div>
+          <div class="set-task"><strong>Zadanie A:</strong> Proszę napisać ogłoszenie o sprzedaży używanego roweru. Podaj markę, stan i cenę. (30 słów)</div>
+          <div class="set-task"><strong>Zadanie B:</strong> Proszę napisać esej na temat: „Czy media społecznościowe pomagają czy szkodzą młodym ludziom?". Przedstaw argumenty za i przeciw. (170 słów)</div>
+          <div class="mt-12"><button class="btn-primary" onclick="openWritingScreen(3)">Wybierz</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WRITING EDITOR -->
+    <div class="screen" id="screen-writing-editor">
+      <div class="screen-scroll">
+        <div class="section-title" id="writingSetTitle">Zestaw 1</div>
+        <div id="writingTaskDesc"></div>
+
+        <div class="card mt-16">
+          <div class="mb-8" style="font-weight:600">Zadanie A:</div>
+          <textarea class="writing-area" id="writingA" placeholder="Wpisz swoją odpowiedź tutaj..." oninput="updateWordCount('writingA','wcA')"></textarea>
+          <div class="word-counter">Liczba słów: <span id="wcA">0</span></div>
+        </div>
+
+        <div class="card mt-16">
+          <div class="mb-8" style="font-weight:600">Zadanie B:</div>
+          <textarea class="writing-area" id="writingB" placeholder="Wpisz swoją odpowiedź tutaj..." style="min-height:250px" oninput="updateWordCount('writingB','wcB')"></textarea>
+          <div class="word-counter">Liczba słów: <span id="wcB">0</span></div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-primary" onclick="alert('Twoje odpowiedzi zostały zapisane.')">Wyślij do sprawdzenia</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPEAKING -->
+    <div class="screen" id="screen-ex-speaking">
+      <div class="screen-scroll">
+        <div class="section-title">Mówienie</div>
+        <div class="timer-display" id="speakingTimer">&#9201; Pozostały czas: <span id="timerValue">19:58</span></div>
+
+        <div class="card mb-16">
+          <div class="mb-8"><strong>Zadanie A:</strong></div>
+          <div class="exercise-text mb-12">Proszę opisać fotografię i przedstawioną na niej sytuację.</div>
+          <div class="photo-placeholder"></div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="mb-8"><strong>Zadanie B:</strong></div>
+          <div class="exercise-text">Proszę opowiedzieć o miejscu, które chciałbyś/chciałabyś odwiedzić i dlaczego.</div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="mb-8"><strong>Zadanie C:</strong></div>
+          <div class="exercise-text">Proszę porozmawiać z kelnerem w restauracji – zamówić jedzenie, zapytać o składniki dania i poprosić o rachunek.</div>
+        </div>
+
+        <div class="mt-20 text-center">
+          <button class="btn-danger" onclick="alert('Egzamin ustny zakończony.')">Zakończ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: POSTEP ==================== -->
+    <div class="screen" id="screen-progress">
+      <div class="screen-scroll">
+        <div class="section-title">Mój postęp</div>
+
+        <div class="card mb-20">
+          <div class="mb-12" style="font-weight:600;font-size:16px">Wykorzystanie limitu</div>
+          <div class="progress-row">
+            <span class="progress-label">Pisanie</span>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:33%"></div></div>
+            <span class="progress-value">1/3</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">Mówienie</span>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:0%"></div></div>
+            <span class="progress-value">0/3</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">Czytanie</span>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:40%"></div></div>
+            <span class="progress-value">2/5</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">Gramatyka</span>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:30%"></div></div>
+            <span class="progress-value">3/10</span>
+          </div>
+          <div class="progress-row">
+            <span class="progress-label">Słuchanie</span>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:20%"></div></div>
+            <span class="progress-value">1/5</span>
+          </div>
+          <div class="text-small mt-12">Limity odnowią się: 31/03/2026</div>
+        </div>
+
+        <div class="card">
+          <div class="mb-12" style="font-weight:600;font-size:16px">Wyniki</div>
+          <div class="result-row">
+            <span class="rr-label">Słuchanie</span>
+            <span class="rr-value">75%</span>
+            <span class="rr-arrow">›</span>
+          </div>
+          <div class="result-row">
+            <span class="rr-label">Czytanie</span>
+            <span class="rr-value">90%</span>
+            <span class="rr-arrow">›</span>
+          </div>
+          <div class="result-row">
+            <span class="rr-label">Mówienie</span>
+            <span class="rr-value">2</span>
+            <span class="rr-arrow">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: PROFIL ==================== -->
+    <div class="screen" id="screen-profile">
+      <div class="screen-scroll">
+        <div class="profile-header">
+          <div class="profile-avatar">JK</div>
+          <div class="profile-name">Jan Kowalski</div>
+          <div class="profile-email">jan.kowalski@example.com</div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="mb-12" style="font-weight:600;font-size:16px">Plan i funkcje</div>
+          <div class="info-row">
+            <span class="info-label">Plan</span>
+            <span class="info-value"><span class="badge">Premium Miesiąc</span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Subskrypcja wygasa</span>
+            <span class="info-value">30/04/2026</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Limity odnowią się</span>
+            <span class="info-value">31/03/2026</span>
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light)">
+            <div class="mb-8" style="font-weight:500;font-size:14px;color:var(--text-secondary)">Wykupione funkcje:</div>
+            <div class="info-row"><span class="info-label">Pisanie</span><span class="info-value">3 pozostało w tym tygodniu</span></div>
+            <div class="info-row"><span class="info-label">Mówienie</span><span class="info-value">3 pozostało w tym tygodniu</span></div>
+            <div class="info-row"><span class="info-label">Czytanie</span><span class="info-value">5 pozostało w tym tygodniu</span></div>
+            <div class="info-row"><span class="info-label">Gramatyka</span><span class="info-value">10 pozostało w tym tygodniu</span></div>
+            <div class="info-row"><span class="info-label">Słuchanie</span><span class="info-value">5 pozostało w tym tygodniu</span></div>
+          </div>
+          <div class="mt-16 text-center">
+            <button class="btn-primary">Kup lub ulepsz plan</button>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="mb-12" style="font-weight:600;font-size:16px">Powiadomienia</div>
+          <div class="info-row">
+            <span class="info-label">Odnowienie limitu tygodniowego</span>
+            <span class="info-value" style="font-size:13px;color:var(--text-muted)">Automatyczne</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Powiadomienia Push</span>
+            <span class="info-value">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </span>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="info-row" style="border:none">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);cursor:pointer">
+              <input type="checkbox"> Akceptuję politykę prywatności i regulamin usuwania konta
+            </label>
+          </div>
+          <div class="text-center">
+            <button class="btn-danger">Usuń konto</button>
+          </div>
+        </div>
+
+        <div class="text-center text-small mb-20">
+          Wersja aplikacji: 1.0.0
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-item active" data-tab="0" onclick="switchTab(0)">
+      <span class="tab-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+      <span class="tab-label">Główna</span>
+    </button>
+    <button class="tab-item" data-tab="1" onclick="switchTab(1)">
+      <span class="tab-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2V3z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7V3z"/></svg></span>
+      <span class="tab-label">Ćwiczenia</span>
+    </button>
+    <button class="tab-item" data-tab="2" onclick="switchTab(2)">
+      <span class="tab-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      <span class="tab-label">Postęp</span>
+    </button>
+    <button class="tab-item" data-tab="3" onclick="switchTab(3)">
+      <span class="tab-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span class="tab-label">Profil</span>
+    </button>
+  </div>
+</div><!-- /ipad-frame -->
+
+<script>
+// ========== THEME TOGGLE ==========
+function toggleTheme() {
+  const frame = document.getElementById('ipadFrame');
+  if (frame.getAttribute('data-theme') === 'dark') {
+    frame.removeAttribute('data-theme');
+  } else {
+    frame.setAttribute('data-theme', 'dark');
+  }
+}
+
+// ========== NAVIGATION ==========
+const tabScreens = ['screen-home', 'screen-exercises', 'screen-progress', 'screen-profile'];
+const tabTitles = ['Zdaj B1', 'Ćwiczenia', 'Mój postęp', 'Profil'];
+let currentTab = 0;
+let navHistory = [];
+let timerInterval = null;
+
+function switchTab(idx) {
+  // Stop timer if leaving speaking screen
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+  currentTab = idx;
+  navHistory = [];
+
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Show tab screen
+  document.getElementById(tabScreens[idx]).classList.add('active');
+
+  // Update tab bar
+  document.querySelectorAll('.tab-item').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+
+  // Update nav
+  document.getElementById('navTitle').textContent = tabTitles[idx];
+  document.getElementById('backBtn').style.display = 'none';
+
+  // Scroll to top
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+function navigateTo(screenId, title, tabOverride) {
+  if (tabOverride !== undefined) {
+    // Switch tab first
+    document.querySelectorAll('.tab-item').forEach((t, i) => {
+      t.classList.toggle('active', i === tabOverride);
+    });
+    currentTab = tabOverride;
+  }
+
+  // Save current state
+  const currentScreen = document.querySelector('.screen.active');
+  if (currentScreen) {
+    navHistory.push({
+      screenId: currentScreen.id,
+      title: document.getElementById('navTitle').textContent
+    });
+  }
+
+  // Hide all, show target
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+
+  // Update nav
+  document.getElementById('navTitle').textContent = title || '';
+  document.getElementById('backBtn').style.display = 'flex';
+
+  // Scroll to top
+  document.getElementById('contentArea').scrollTop = 0;
+
+  // Start timer for speaking
+  if (screenId === 'screen-ex-speaking') startTimer();
+}
+
+function goBack() {
+  if (navHistory.length === 0) {
+    switchTab(currentTab);
+    return;
+  }
+
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+
+  const prev = navHistory.pop();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(prev.screenId).classList.add('active');
+  document.getElementById('navTitle').textContent = prev.title;
+  document.getElementById('backBtn').style.display = navHistory.length > 0 ? 'flex' : 'none';
+  document.getElementById('contentArea').scrollTop = 0;
+}
+
+// ========== EXPANDABLE ==========
+function toggleExpand(el) {
+  el.classList.toggle('open');
+}
+
+// ========== DRAG & DROP ==========
+let draggedEl = null;
+
+function dragStart(e) {
+  draggedEl = e.target;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => e.target.style.opacity = '0.4', 0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('dropZone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; dropZone.style.borderColor = '#2563eb'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'rgba(37,99,235,0.3)'; });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'rgba(37,99,235,0.3)';
+      if (draggedEl) {
+        const label = document.getElementById('dropLabel');
+        if (label) label.remove();
+        draggedEl.style.opacity = '1';
+        dropZone.appendChild(draggedEl);
+        draggedEl = null;
+      }
+    });
+  }
+});
+
+document.addEventListener('dragend', e => { e.target.style.opacity = '1'; });
+
+// ========== WORD COUNT ==========
+function updateWordCount(textareaId, counterId) {
+  const text = document.getElementById(textareaId).value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  document.getElementById(counterId).textContent = words;
+}
+
+// ========== WRITING SCREEN ==========
+const writingSets = {
+  1: {
+    title: 'Zestaw 1',
+    a: 'Proszę napisać zaproszenie na grilla z okazji Twoich urodzin. Podaj miejsce, datę i godzinę. (30 słów)',
+    b: 'Proszę napisać list do przyjaciela, w którym opisujesz swoje wakacje w polskich górach. Co robiłeś/robiłaś? Co Ci się podobało? (170 słów)'
+  },
+  2: {
+    title: 'Zestaw 2',
+    a: 'Proszę napisać wiadomość do sąsiada z przeprosinami za głośną muzykę w weekend. (25 słów)',
+    b: 'Proszę napisać recenzję restauracji, w której ostatnio byłeś/byłaś. Opisz jedzenie, obsługę i atmosferę. (175 słów)'
+  },
+  3: {
+    title: 'Zestaw 3',
+    a: 'Proszę napisać ogłoszenie o sprzedaży używanego roweru. Podaj markę, stan i cenę. (30 słów)',
+    b: 'Proszę napisać esej na temat: „Czy media społecznościowe pomagają czy szkodzą młodym ludziom?". Przedstaw argumenty za i przeciw. (170 słów)'
+  }
+};
+
+function openWritingScreen(setNum) {
+  const set = writingSets[setNum];
+  document.getElementById('writingSetTitle').textContent = set.title;
+  document.getElementById('writingTaskDesc').innerHTML =
+    '<div class="card"><div class="set-task"><strong>Zadanie A:</strong> ' + set.a + '</div>' +
+    '<div class="set-task"><strong>Zadanie B:</strong> ' + set.b + '</div></div>';
+  document.getElementById('writingA').value = '';
+  document.getElementById('writingB').value = '';
+  document.getElementById('wcA').textContent = '0';
+  document.getElementById('wcB').textContent = '0';
+  navigateTo('screen-writing-editor', set.title + ' — Pisanie');
+}
+
+// ========== TIMER ==========
+function startTimer() {
+  let seconds = 19 * 60 + 58;
+  if (timerInterval) clearInterval(timerInterval);
+
+  function updateDisplay() {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('timerValue').textContent =
+      m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  updateDisplay();
+  timerInterval = setInterval(() => {
+    seconds--;
+    if (seconds < 0) { clearInterval(timerInterval); timerInterval = null; return; }
+    updateDisplay();
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
