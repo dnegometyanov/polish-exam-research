@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 2: AI Writing Assistant & Handwriting Recognition — Polski B1 Pro</title>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --glass-bg: rgba(255,255,255,0.12);
+    --glass-bg-hover: rgba(255,255,255,0.18);
+    --glass-bg-raised: rgba(255,255,255,0.16);
+    --glass-bg-strong: rgba(255,255,255,0.20);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-border-light: rgba(255,255,255,0.10);
+    --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.3);
+    --glass-blur: blur(40px) saturate(180%);
+    --radius-card: 20px;
+    --radius-pill: 50px;
+    --ai-glow: rgba(139,92,246,0.3);
+    --ai-border: rgba(139,92,246,0.4);
+    --font: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', system-ui, sans-serif;
+  }
+
+  html{font-family:var(--font);-webkit-font-smoothing:antialiased;color:#fff}
+
+  body{
+    min-height:100vh;
+    background:#0a0e1a;
+    display:flex;flex-direction:column;align-items:center;
+    padding:40px 20px 60px;
+    overflow-x:hidden;
+  }
+
+  /* Page header */
+  .page-header{
+    text-align:center;max-width:800px;margin-bottom:48px;
+  }
+  .page-header h1{
+    font-size:28px;font-weight:700;letter-spacing:-0.5px;
+    background:linear-gradient(135deg,#c7d2fe,#a78bfa,#7dd3fc);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:12px;
+  }
+  .page-header p{
+    font-size:15px;color:rgba(255,255,255,0.55);line-height:1.6;
+  }
+
+  /* iPad Frame */
+  .ipad-frame{
+    width:min(1194px,94vw);
+    aspect-ratio:1194/834;
+    border-radius:24px;
+    background:linear-gradient(145deg,#0f1729 0%,#111d2e 35%,#0d2233 65%,#0a1e2a 100%);
+    border:1.5px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 40px 100px rgba(0,0,0,0.5),
+      0 0 120px rgba(59,130,246,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+
+  /* Status bar */
+  .status-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 24px;
+    font-size:12px;font-weight:600;
+    color:rgba(255,255,255,0.5);
+    flex-shrink:0;
+  }
+  .status-bar .time{letter-spacing:0.5px}
+  .status-icons{display:flex;gap:6px;align-items:center}
+  .status-icons svg{width:14px;height:14px;fill:rgba(255,255,255,0.5)}
+
+  /* Top navigation bar */
+  .top-nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:6px 20px 10px;
+    flex-shrink:0;
+  }
+  .top-nav-title{
+    font-size:17px;font-weight:700;letter-spacing:-0.3px;
+  }
+  .nav-timer{
+    display:flex;align-items:center;gap:8px;
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius-pill);
+    padding:6px 16px;
+    font-size:13px;font-weight:600;
+    box-shadow:var(--glass-highlight);
+  }
+  .nav-timer .timer-icon{color:#fbbf24;font-size:14px}
+
+  /* Main content split */
+  .main-content{
+    display:flex;flex:1;gap:10px;
+    padding:0 12px 10px;
+    min-height:0;
+  }
+
+  /* LEFT PANEL */
+  .left-panel{
+    flex:0 0 59%;display:flex;flex-direction:column;gap:10px;min-height:0;
+  }
+
+  /* Task header bar */
+  .task-header{
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    padding:10px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    box-shadow:var(--glass-highlight);
+    flex-shrink:0;
+  }
+  .task-header h2{
+    font-size:14px;font-weight:600;letter-spacing:-0.2px;
+  }
+  .task-badge{
+    font-size:11px;font-weight:600;
+    background:rgba(251,191,36,0.2);color:#fbbf24;
+    border:1px solid rgba(251,191,36,0.3);
+    border-radius:var(--radius-pill);
+    padding:3px 12px;
+  }
+
+  /* Prompt card */
+  .prompt-card{
+    background:var(--glass-bg-raised);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    padding:14px 16px;
+    box-shadow:var(--glass-highlight);
+    flex-shrink:0;
+  }
+  .prompt-label{
+    font-size:11px;font-weight:600;text-transform:uppercase;
+    letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:8px;
+  }
+  .prompt-card p{
+    font-size:13.5px;line-height:1.65;color:rgba(255,255,255,0.85);
+  }
+
+  /* Writing area */
+  .writing-area{
+    flex:1;min-height:0;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border-light);
+    border-radius:16px;
+    padding:16px;
+    display:flex;flex-direction:column;
+    box-shadow:var(--glass-highlight);
+  }
+  .writing-text{
+    flex:1;
+    font-size:14px;line-height:1.8;
+    color:rgba(255,255,255,0.9);
+    overflow:hidden;
+  }
+  .writing-text .cursor{
+    display:inline-block;width:2px;height:17px;
+    background:#60a5fa;
+    animation:blink 1s step-end infinite;
+    vertical-align:text-bottom;
+    margin-left:1px;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  /* Word counter */
+  .word-counter{
+    display:flex;align-items:center;gap:12px;
+    margin-top:10px;padding-top:10px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    flex-shrink:0;
+  }
+  .word-counter span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);white-space:nowrap}
+  .word-bar{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,0.08);overflow:hidden}
+  .word-bar-fill{height:100%;width:50%;border-radius:4px;
+    background:linear-gradient(90deg,#fbbf24,#f59e0b);
+    transition:width 0.3s;
+  }
+
+  /* Diacritics toolbar */
+  .diacritics-bar{
+    display:flex;gap:6px;flex-shrink:0;
+    flex-wrap:wrap;
+  }
+  .diac-key{
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius-pill);
+    padding:5px 11px;
+    font-size:14px;font-weight:500;
+    color:rgba(255,255,255,0.8);
+    cursor:pointer;
+    box-shadow:var(--glass-highlight);
+    transition:background 0.15s;
+  }
+  .diac-key:hover{background:var(--glass-bg-hover)}
+
+  /* RIGHT PANEL */
+  .right-panel{
+    flex:0 0 40%;display:flex;flex-direction:column;min-height:0;
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:16px;
+    box-shadow:var(--glass-highlight);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* AI animated border */
+  .right-panel::before{
+    content:'';position:absolute;inset:-2px;
+    border-radius:18px;
+    background:conic-gradient(from var(--ai-angle,0deg),transparent 40%,rgba(139,92,246,0.35),rgba(96,165,250,0.25),transparent 60%);
+    animation:ai-rotate 4s linear infinite;
+    z-index:-1;
+  }
+  @keyframes ai-rotate{to{--ai-angle:360deg}}
+  @property --ai-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+
+  /* Tabs */
+  .ai-tabs{
+    display:flex;gap:2px;padding:10px 12px 0;flex-shrink:0;
+  }
+  .ai-tab{
+    flex:1;text-align:center;
+    padding:8px 8px 10px;
+    font-size:12px;font-weight:600;
+    border-radius:12px 12px 0 0;
+    cursor:pointer;
+    color:rgba(255,255,255,0.45);
+    background:transparent;
+    border:1px solid transparent;
+    border-bottom:none;
+    transition:all 0.2s;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+  }
+  .ai-tab.active{
+    background:rgba(139,92,246,0.15);
+    border-color:rgba(139,92,246,0.25);
+    color:#c4b5fd;
+  }
+  .ai-tab .sparkle{font-size:11px}
+
+  /* Tab content area */
+  .ai-tab-content{
+    flex:1;min-height:0;overflow-y:auto;
+    padding:12px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .ai-tab-content::-webkit-scrollbar{width:3px}
+  .ai-tab-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:3px}
+
+  /* Score badge */
+  .score-row{
+    display:flex;align-items:center;gap:14px;
+  }
+  .score-circle{
+    width:52px;height:52px;
+    border-radius:50%;
+    background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(96,165,250,0.2));
+    border:2px solid rgba(139,92,246,0.5);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .score-circle span{font-size:17px;font-weight:800;color:#c4b5fd}
+  .score-info{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5}
+  .score-info strong{color:rgba(255,255,255,0.8);font-weight:600;display:block}
+
+  /* Feedback items */
+  .feedback-list{display:flex;flex-direction:column;gap:6px}
+  .feedback-item{
+    display:flex;align-items:flex-start;gap:8px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:12.5px;line-height:1.5;
+    color:rgba(255,255,255,0.8);
+  }
+  .feedback-item .icon{flex-shrink:0;font-size:14px;margin-top:1px}
+  .feedback-item.ok .icon{color:#4ade80}
+  .feedback-item.warn .icon{color:#fbbf24}
+  .feedback-item.warn{
+    border-color:rgba(251,191,36,0.15);
+    background:rgba(251,191,36,0.06);
+  }
+
+  /* Auto fix button */
+  .btn-autofix{
+    align-self:flex-start;
+    background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(96,165,250,0.2));
+    border:1px solid rgba(139,92,246,0.35);
+    border-radius:var(--radius-pill);
+    padding:8px 18px;
+    font-size:12.5px;font-weight:600;
+    color:#c4b5fd;
+    cursor:pointer;
+    display:flex;align-items:center;gap:6px;
+    box-shadow:var(--glass-highlight);
+    transition:all 0.2s;
+  }
+  .btn-autofix:hover{background:linear-gradient(135deg,rgba(139,92,246,0.35),rgba(96,165,250,0.3))}
+  .btn-autofix .sparkle{font-size:13px}
+
+  /* Tab 2 preview */
+  .tab2-preview{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px;
+    padding:12px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .upload-zone{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:rgba(255,255,255,0.04);
+    border:1.5px dashed rgba(255,255,255,0.15);
+    border-radius:12px;
+    padding:16px;
+    font-size:12px;color:rgba(255,255,255,0.4);
+    cursor:pointer;
+    transition:border-color 0.2s;
+  }
+  .upload-zone:hover{border-color:rgba(255,255,255,0.3)}
+  .upload-zone svg{width:20px;height:20px;stroke:rgba(255,255,255,0.35);fill:none;stroke-width:1.5}
+
+  .handwriting-mock{
+    border-radius:10px;overflow:hidden;
+    background:linear-gradient(145deg,#f5f0e8,#ebe4d4);
+    padding:16px 14px;
+    position:relative;
+    min-height:70px;
+  }
+  .handwriting-mock::before{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(transparent,transparent 27px,rgba(0,120,215,0.12) 27px,rgba(0,120,215,0.12) 28px);
+    pointer-events:none;
+  }
+  .handwriting-text{
+    font-family:'Segoe Script','Bradley Hand','Comic Sans MS',cursive;
+    font-size:13px;color:#2a2520;line-height:28px;
+    position:relative;z-index:1;
+  }
+
+  .ocr-result{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:10px;
+    padding:10px 12px;
+  }
+  .ocr-label{
+    font-size:10px;font-weight:600;text-transform:uppercase;
+    letter-spacing:0.8px;color:rgba(255,255,255,0.35);margin-bottom:6px;
+  }
+  .ocr-text{
+    font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;
+    font-style:italic;
+  }
+  .ocr-accuracy{
+    display:flex;align-items:center;gap:6px;margin-top:8px;
+    font-size:11px;font-weight:600;color:#4ade80;
+  }
+  .ocr-accuracy .dot{width:6px;height:6px;border-radius:50%;background:#4ade80}
+
+  .btn-verify{
+    align-self:flex-start;
+    background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(96,165,250,0.15));
+    border:1px solid rgba(139,92,246,0.3);
+    border-radius:var(--radius-pill);
+    padding:7px 16px;
+    font-size:12px;font-weight:600;
+    color:#a5b4fc;
+    cursor:pointer;
+    display:flex;align-items:center;gap:5px;
+    box-shadow:var(--glass-highlight);
+  }
+
+  /* Bottom bar */
+  .bottom-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 16px 12px;
+    flex-shrink:0;
+  }
+  .bottom-bar-inner{
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius-pill);
+    padding:6px 8px;
+    box-shadow:var(--glass-highlight);
+  }
+  .bb-btn{
+    padding:6px 18px;
+    font-size:12.5px;font-weight:600;
+    border-radius:var(--radius-pill);
+    cursor:pointer;
+    border:none;background:transparent;color:rgba(255,255,255,0.6);
+    transition:all 0.15s;
+  }
+  .bb-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+  .bb-btn.primary{
+    background:linear-gradient(135deg,rgba(96,165,250,0.35),rgba(59,130,246,0.25));
+    border:1px solid rgba(96,165,250,0.3);
+    color:#93c5fd;
+  }
+  .bb-btn.finish{
+    background:linear-gradient(135deg,rgba(74,222,128,0.25),rgba(34,197,94,0.2));
+    border:1px solid rgba(74,222,128,0.25);
+    color:#86efac;
+  }
+  .section-dots{display:flex;gap:6px;align-items:center}
+  .section-dots .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,0.2);
+  }
+  .section-dots .dot.active{background:rgba(96,165,250,0.7)}
+
+  /* Responsive */
+  @media(max-width:900px){
+    .ipad-frame{width:98vw}
+    .main-content{gap:6px;padding:0 6px 6px}
+    .writing-text{font-size:12px}
+  }
+  @media(max-width:600px){
+    .main-content{flex-direction:column}
+    .left-panel,.right-panel{flex:none!important;width:100%}
+    .ipad-frame{aspect-ratio:auto;min-height:90vh}
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Concept 2: AI Writing Assistant & Handwriting Recognition</h1>
+  <p>Polski B1 Pro — Writing practice screen with real-time AI verification, grammar feedback, and handwritten text recognition via photo upload. iPadOS 26 Liquid Glass design.</p>
+</header>
+
+<div class="ipad-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">14:37</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 16 16"><path d="M1 11h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-4h2v14h-2z"/></svg>
+      <svg viewBox="0 0 16 16"><path d="M8 2a8 8 0 0 1 5.66 2.34l-1.42 1.42a6 6 0 0 0-8.48 0L2.34 4.34A8 8 0 0 1 8 2zm0 4a4 4 0 0 1 2.83 1.17l-1.42 1.42a2 2 0 0 0-2.82 0L5.17 7.17A4 4 0 0 1 8 6zm0 4a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1z"/></svg>
+      <svg viewBox="0 0 20 10"><rect x="0" y="0" width="17" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="1.5" y="1.5" width="11" height="7" rx="1" fill="rgba(74,222,128,0.8)"/><rect x="18" y="3" width="2" height="4" rx="0.5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <!-- Top Nav -->
+  <div class="top-nav">
+    <div class="top-nav-title">Polski B1 Pro</div>
+    <div class="nav-timer">
+      <span class="timer-icon">&#9200;</span>
+      <span>52:18 pozostało</span>
+    </div>
+  </div>
+
+  <!-- Main Split Content -->
+  <div class="main-content">
+    <!-- LEFT: Writing Editor -->
+    <div class="left-panel">
+      <!-- Task Header -->
+      <div class="task-header">
+        <h2>Pisanie — Zestaw 2, Tekst B</h2>
+        <span class="task-badge">B1</span>
+      </div>
+
+      <!-- Prompt -->
+      <div class="prompt-card">
+        <div class="prompt-label">Polecenie</div>
+        <p>Napisz recenzję ostatnio przeczytanej książki lub obejrzanego filmu. Przedstaw krótko treść, wyraź swoją opinię i uzasadnij ją. (150–175 słów)</p>
+      </div>
+
+      <!-- Writing Area -->
+      <div class="writing-area">
+        <div class="writing-text">
+          Ostatnio obejrzałem film „Zimna wojna" w reżyserii Pawła Pawlikowskiego. Film opowiada historię miłosną dwojga ludzi, Wiktora i Zuli, rozgrywającą się w powojennej Polsce i Europie Zachodniej.<br><br>
+          Moim zdaniem, jest to jeden z najpiękniejszych polskich filmów, bo reżyser pokazał emocje w sposób bardzo subtelny. Zdjęcia w czerni i bieli nadają filmowi wyjątkowy klimat. Muzyka ludowa, która towarzyszy wielu scenom, podkreśla polską tożsamość bohaterów.<br><br>
+          Film porusza mnie za każdym razem, gdy go oglądam. Szczególnie podobała mi się gra aktorska Joanny Kulig, która zagrała rolę Zuli<span class="cursor"></span>
+        </div>
+        <div class="word-counter">
+          <span>87 / 150–175 słów</span>
+          <div class="word-bar"><div class="word-bar-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- Diacritics -->
+      <div class="diacritics-bar">
+        <span class="diac-key">ą</span>
+        <span class="diac-key">ć</span>
+        <span class="diac-key">ę</span>
+        <span class="diac-key">ł</span>
+        <span class="diac-key">ń</span>
+        <span class="diac-key">ó</span>
+        <span class="diac-key">ś</span>
+        <span class="diac-key">ź</span>
+        <span class="diac-key">ż</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: AI Panel -->
+    <div class="right-panel">
+      <!-- Tabs -->
+      <div class="ai-tabs">
+        <div class="ai-tab active">
+          <span class="sparkle">&#10024;</span> Weryfikacja AI
+        </div>
+        <div class="ai-tab">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6 21v-1a6 6 0 0 1 6-6"/></svg>
+          Zdjęcie pisma
+        </div>
+      </div>
+
+      <!-- AI Verification Content -->
+      <div class="ai-tab-content">
+        <!-- Score -->
+        <div class="score-row">
+          <div class="score-circle"><span>B1+</span></div>
+          <div class="score-info">
+            <strong>Wstępna ocena poziomu</strong>
+            Analiza na podstawie 87 słów — kontynuuj pisanie
+          </div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="feedback-list">
+          <div class="feedback-item ok">
+            <span class="icon">&#10003;</span>
+            <span>Poprawna struktura recenzji (wstęp, rozwinięcie)</span>
+          </div>
+          <div class="feedback-item ok">
+            <span class="icon">&#10003;</span>
+            <span>Dobry zakres słownictwa — użycie przymiotników i przysłówków</span>
+          </div>
+          <div class="feedback-item warn">
+            <span class="icon">&#9888;</span>
+            <span>Zdanie 3: rozważyć użycie „ponieważ" zamiast „bo" w tekście formalnym</span>
+          </div>
+          <div class="feedback-item warn">
+            <span class="icon">&#9888;</span>
+            <span>Brak zakończenia — dodaj podsumowanie opinii i rekomendację</span>
+          </div>
+        </div>
+
+        <!-- Auto-fix -->
+        <button class="btn-autofix">
+          <span class="sparkle">&#10024;</span> Popraw automatycznie
+        </button>
+
+        <!-- Divider + Tab 2 preview -->
+        <div style="border-top:1px solid rgba(255,255,255,0.07);margin:4px 0"></div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.8px">Podgląd: Rozpoznawanie pisma</div>
+
+        <div class="tab2-preview">
+          <div class="upload-zone">
+            <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l.62 2.48A2 2 0 0 0 4.56 21h14.88a2 2 0 0 0 1.94-1.52L22 17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dodaj zdjęcie tekstu ręcznego
+          </div>
+
+          <div class="handwriting-mock">
+            <div class="handwriting-text">
+              Chciałbym polecić film<br>
+              „Zimna wojna". To jest<br>
+              piękny polski film o miłości.
+            </div>
+          </div>
+
+          <div class="ocr-result">
+            <div class="ocr-label">Rozpoznany tekst:</div>
+            <div class="ocr-text">Chciałbym polecić film „Zimna wojna". To jest piękny polski film o miłości.</div>
+            <div class="ocr-accuracy">
+              <span class="dot"></span> Rozpoznawanie: 94%
+            </div>
+          </div>
+
+          <button class="btn-verify">
+            <span class="sparkle">&#10024;</span> Weryfikuj tekst AI
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
+      <button class="bb-btn">&#8592; Wróć</button>
+      <div class="section-dots">
+        <span class="dot"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="bb-btn primary">Zapisz</button>
+        <button class="bb-btn finish">Zakończ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

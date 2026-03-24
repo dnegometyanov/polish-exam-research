@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 3: Speaking Practice & AI Pronunciation Scoring — Polski B1 Pro</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --glass-bg: rgba(255,255,255,0.12);
+    --glass-bg-hover: rgba(255,255,255,0.18);
+    --glass-bg-strong: rgba(255,255,255,0.2);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.3);
+    --glass-blur: blur(40px) saturate(180%);
+    --radius-card: 20px;
+    --radius-pill: 50px;
+    --blue: #007AFF;
+    --red: #FF3B30;
+    --green: #34C759;
+    --yellow: #FFD60A;
+    --orange: #FF9F0A;
+    --purple: #BF5AF2;
+    --ai-accent: linear-gradient(135deg, #7B61FF, #007AFF);
+  }
+
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(145deg, #1a1a2e 0%, #0d0d1a 40%, #0a0f1e 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 36px;
+    max-width: 700px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .page-header p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+  }
+
+  /* iPad Frame */
+  .ipad-frame {
+    width: 100%;
+    max-width: 1194px;
+    aspect-ratio: 1194 / 834;
+    background: linear-gradient(160deg, #1c1c2e 0%, #111122 50%, #0e1420 100%);
+    border-radius: 28px;
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 40px 80px rgba(0,0,0,0.5),
+      0 20px 40px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ===== TOP NAV BAR ===== */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(255,255,255,0.08);
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-back {
+    font-size: 14px;
+    color: var(--blue);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .nav-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .task-progress {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .progress-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s;
+  }
+  .progress-dots .dot.active {
+    background: var(--blue);
+    box-shadow: 0 0 8px rgba(0,122,255,0.5);
+  }
+  .progress-dots .dot.completed {
+    background: var(--green);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .timer-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(255,165,0,0.15);
+    border: 1px solid rgba(255,165,0,0.3);
+    box-shadow: var(--glass-highlight);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--orange);
+  }
+  .timer-pill .icon { font-size: 14px; }
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(255,59,48,0.12);
+    border: 1px solid rgba(255,59,48,0.25);
+    box-shadow: var(--glass-highlight);
+    font-size: 12px;
+    color: rgba(255,59,48,0.9);
+    font-weight: 500;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: statusBlink 2s ease-in-out infinite;
+  }
+  @keyframes statusBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content {
+    flex: 1;
+    display: flex;
+    padding: 16px 20px;
+    gap: 16px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* --- LEFT PANEL --- */
+  .left-panel {
+    flex: 0 0 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .left-panel::-webkit-scrollbar { width: 3px; }
+  .left-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+  .photo-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1.5px solid var(--glass-border);
+    box-shadow:
+      var(--glass-highlight),
+      0 8px 32px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+  .photo-frame .photo-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(180,130,80,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 40%, rgba(100,150,100,0.25) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 80%, rgba(200,160,100,0.2) 0%, transparent 35%),
+      linear-gradient(180deg, rgba(135,185,230,0.3) 0%, rgba(180,160,120,0.4) 40%, rgba(120,90,60,0.5) 100%);
+  }
+  /* Fake cafe scene elements */
+  .photo-frame .scene-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12px;
+  }
+  .scene-label {
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    background: rgba(0,0,0,0.45);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  /* Cafe silhouettes */
+  .photo-frame .cafe-elements {
+    position: absolute;
+    inset: 0;
+  }
+  .cafe-table {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    border-radius: 8px 8px 0 0;
+    background: rgba(160,120,80,0.4);
+    border: 1px solid rgba(200,160,100,0.2);
+  }
+  .cafe-table:nth-child(1) { bottom: 35%; left: 20%; }
+  .cafe-table:nth-child(2) { bottom: 30%; left: 55%; width: 70px; }
+  .cafe-person {
+    position: absolute;
+    width: 20px;
+    height: 40px;
+    border-radius: 10px 10px 6px 6px;
+    background: rgba(100,80,60,0.5);
+  }
+  .cafe-person::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(180,150,120,0.4);
+  }
+  .cafe-person:nth-child(3) { bottom: 38%; left: 15%; }
+  .cafe-person:nth-child(4) { bottom: 38%; left: 30%; }
+  .cafe-person:nth-child(5) { bottom: 33%; left: 52%; }
+  .cafe-person:nth-child(6) { bottom: 33%; left: 67%; }
+  /* Umbrella */
+  .cafe-umbrella {
+    position: absolute;
+    width: 80px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(200,60,60,0.3);
+    top: 28%;
+    left: 48%;
+  }
+  .cafe-umbrella::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 2px;
+    height: 40px;
+    background: rgba(150,150,150,0.2);
+  }
+  /* Trees */
+  .tree {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    border-radius: 50% 50% 20% 20%;
+    background: rgba(60,120,60,0.3);
+  }
+  .tree::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 15px;
+    background: rgba(100,80,50,0.3);
+  }
+  .tree:nth-child(8) { top: 12%; right: 8%; }
+  .tree:nth-child(9) { top: 10%; right: 22%; width: 35px; height: 45px; }
+
+  .photo-refraction {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.04) 100%);
+    pointer-events: none;
+  }
+
+  /* Prompt card */
+  .prompt-card {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--glass-highlight), 0 4px 16px rgba(0,0,0,0.2);
+    padding: 14px 16px;
+  }
+  .prompt-card .prompt-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .prompt-card .prompt-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.9);
+  }
+  .ai-help-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, rgba(123,97,255,0.2), rgba(0,122,255,0.15));
+    border: 1px solid rgba(123,97,255,0.3);
+    color: #BF9FFF;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: var(--glass-highlight);
+  }
+  .ai-help-btn .sparkle { font-size: 15px; }
+
+  /* AI Help Panel */
+  .ai-panel {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: linear-gradient(135deg, rgba(123,97,255,0.08), rgba(0,122,255,0.06));
+    border: 1px solid rgba(123,97,255,0.2);
+    border-radius: var(--radius-card);
+    box-shadow: var(--glass-highlight), 0 4px 16px rgba(0,0,0,0.2);
+    padding: 14px 16px;
+  }
+  .ai-panel .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(191,159,255,0.9);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ai-panel .section-title .icon { font-size: 14px; }
+  .word-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .word-chip {
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(123,97,255,0.12);
+    border: 1px solid rgba(123,97,255,0.2);
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+  .phrase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .phrase-item {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.75);
+    padding-left: 12px;
+    position: relative;
+  }
+  .phrase-item::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: rgba(123,97,255,0.6);
+  }
+  .example-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(191,159,255,0.7);
+    cursor: pointer;
+    padding: 6px 0 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 4px;
+  }
+
+  /* --- RIGHT PANEL --- */
+  .right-panel {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    overflow-y: auto;
+    padding-left: 4px;
+  }
+  .right-panel::-webkit-scrollbar { width: 3px; }
+  .right-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+  /* Record button */
+  .record-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    flex-shrink: 0;
+  }
+  .record-btn-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+  }
+  .record-pulse {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: rgba(255,59,48,0.15);
+    animation: recordPulse 2s ease-in-out infinite;
+  }
+  @keyframes recordPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.25); opacity: 0; }
+  }
+  .record-btn {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FF6B6B, var(--red), #CC2020);
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow:
+      var(--glass-highlight),
+      0 4px 20px rgba(255,59,48,0.4),
+      inset 0 -2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .record-btn .mic-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  }
+  .record-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+  }
+
+  /* Waveform */
+  .waveform-wrap {
+    width: 100%;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-highlight);
+    padding: 12px 16px;
+    flex-shrink: 0;
+  }
+  .waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5px;
+    height: 44px;
+    margin-bottom: 8px;
+  }
+  .wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--red), rgba(255,59,48,0.4));
+    animation: waveAnim 1.2s ease-in-out infinite;
+  }
+  @keyframes waveAnim {
+    0%, 100% { height: var(--h-min); }
+    50% { height: var(--h-max); }
+  }
+  .recording-time {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    font-variant-numeric: tabular-nums;
+  }
+  .recording-time span { color: rgba(255,255,255,0.35); }
+
+  /* Score Panel */
+  .score-panel {
+    width: 100%;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--glass-highlight), 0 8px 24px rgba(0,0,0,0.2);
+    padding: 14px 16px;
+  }
+  .score-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .score-circle {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  .score-circle svg {
+    width: 64px;
+    height: 64px;
+    transform: rotate(-90deg);
+  }
+  .score-circle .bg { stroke: rgba(255,255,255,0.08); }
+  .score-circle .fill {
+    stroke: var(--green);
+    stroke-dasharray: 176;
+    stroke-dashoffset: 31.68; /* 176 * (1 - 0.82) */
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px rgba(52,199,89,0.4));
+  }
+  .score-circle .score-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-circle .score-num {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .score-circle .score-max {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 1px;
+  }
+  .score-meta {
+    flex: 1;
+  }
+  .score-meta .label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .score-meta .sublabel {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* Score Bars */
+  .score-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-row .bar-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    width: 52%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+  .bar-fill.green { background: linear-gradient(90deg, #2DB84D, var(--green)); }
+  .bar-fill.yellow { background: linear-gradient(90deg, #E8A000, var(--yellow)); }
+  .score-row .bar-value {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    width: 30px;
+    text-align: right;
+  }
+
+  /* Feedback */
+  .feedback-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .feedback-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.75);
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+  }
+  .feedback-item .fb-icon { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .feedback-item .play-btn {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    cursor: pointer;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .action-btn {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 12px;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-highlight);
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.8);
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* ===== BOTTOM BAR ===== */
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(255,255,255,0.06);
+    border-top: 1px solid var(--glass-border);
+    flex-shrink: 0;
+  }
+  .bottom-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-highlight);
+    font-size: 13px;
+    color: var(--blue);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .bottom-center {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bottom-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .bottom-dot.active {
+    background: var(--blue);
+    border-color: rgba(0,122,255,0.5);
+    box-shadow: 0 0 8px rgba(0,122,255,0.4);
+  }
+  .end-exam-btn {
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    background: rgba(255,59,48,0.12);
+    border: 1px solid rgba(255,59,48,0.25);
+    font-size: 13px;
+    color: var(--red);
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .main-content { flex-direction: column; overflow-y: auto; }
+    .left-panel, .right-panel { flex: none; width: 100%; }
+    .ipad-frame { aspect-ratio: auto; min-height: 700px; }
+    .score-row .bar-label { width: 45%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Concept 3: Speaking Practice & AI Pronunciation Scoring</h1>
+  <p>Polski B1 Pro — Ekran praktyki mowienia z oceną wymowy AI. Interfejs w stylu iPadOS 26 Liquid Glass.</p>
+</div>
+
+<div class="ipad-frame">
+
+  <!-- TOP NAV BAR -->
+  <div class="nav-bar">
+    <div class="nav-left">
+      <div class="nav-back">&#9664; Powrót</div>
+      <div class="nav-title">Mówienie — Zadanie 1: Opis zdjęcia</div>
+    </div>
+    <div class="nav-center">
+      <span class="task-progress">Zadanie 1 z 3</span>
+      <div class="progress-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="timer-pill">
+        <span class="icon">&#9201;</span>
+        Przygotowanie: 2:30
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Nagrywanie wstrzymane
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- Photo Frame -->
+      <div class="photo-frame">
+        <div class="photo-bg"></div>
+        <div class="cafe-elements">
+          <div class="cafe-table"></div>
+          <div class="cafe-table"></div>
+          <div class="cafe-person"></div>
+          <div class="cafe-person"></div>
+          <div class="cafe-person"></div>
+          <div class="cafe-person"></div>
+          <div class="cafe-umbrella"></div>
+          <div class="tree"></div>
+          <div class="tree"></div>
+        </div>
+        <div class="photo-refraction"></div>
+        <div class="scene-overlay">
+          <div class="scene-label">
+            &#128247; Zdjęcie przedstawia ludzi siedzących przy stolikach w kawiarni na świeżym powietrzu. Widoczne są parasole, drzewa i kelner obsługujący gości.
+          </div>
+        </div>
+      </div>
+
+      <!-- Prompt Card -->
+      <div class="prompt-card">
+        <div class="prompt-label">Polecenie</div>
+        <div class="prompt-text">
+          Proszę opisać zdjęcie jak najdokładniej. Kim są osoby na zdjęciu? Co robią? Gdzie się znajdują? Jaka jest atmosfera?
+        </div>
+        <div class="ai-help-btn">
+          <span class="sparkle">&#10024;</span> Podpowiedź AI
+        </div>
+      </div>
+
+      <!-- AI Help Panel (expanded) -->
+      <div class="ai-panel">
+        <div class="section-title"><span class="icon">&#10024;</span> Przydatne słownictwo:</div>
+        <div class="word-chips">
+          <div class="word-chip">kawiarnia</div>
+          <div class="word-chip">kelner</div>
+          <div class="word-chip">zamawiać</div>
+          <div class="word-chip">rozmowa</div>
+          <div class="word-chip">uśmiechać się</div>
+          <div class="word-chip">na świeżym powietrzu</div>
+          <div class="word-chip">stolik</div>
+        </div>
+
+        <div class="section-title">Przydatne zwroty:</div>
+        <div class="phrase-list">
+          <div class="phrase-item">"Na zdjęciu widzę..."</div>
+          <div class="phrase-item">"Na pierwszym planie..."</div>
+          <div class="phrase-item">"W tle znajduje się..."</div>
+          <div class="phrase-item">"Osoby wyglądają na..."</div>
+          <div class="phrase-item">"Atmosfera jest..."</div>
+        </div>
+
+        <div class="example-toggle">&#9654; Przykładowy opis (kliknij aby rozwinąć)</div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- Record Button -->
+      <div class="record-section">
+        <div class="record-btn-wrap">
+          <div class="record-pulse"></div>
+          <div class="record-btn">
+            <span class="mic-icon">&#127908;</span>
+          </div>
+        </div>
+        <div class="record-label">Dotknij, aby nagrywać</div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="waveform-wrap">
+        <div class="waveform" id="waveform"></div>
+        <div class="recording-time">01:23 <span>/ 03:00</span></div>
+      </div>
+
+      <!-- AI Score Panel -->
+      <div class="score-panel">
+        <div class="score-header">
+          <div class="score-circle">
+            <svg viewBox="0 0 64 64">
+              <circle class="bg" cx="32" cy="32" r="28" fill="none" stroke-width="5"/>
+              <circle class="fill" cx="32" cy="32" r="28" fill="none" stroke-width="5"/>
+            </svg>
+            <div class="score-text">
+              <span class="score-num">82</span>
+              <span class="score-max">/ 100</span>
+            </div>
+          </div>
+          <div class="score-meta">
+            <div class="label">Ogólna ocena AI</div>
+            <div class="sublabel">Analiza Twojej wypowiedzi</div>
+          </div>
+        </div>
+
+        <div class="score-bars">
+          <div class="score-row">
+            <span class="bar-label">Wymowa (Pronunciation)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:85%"></div></div>
+            <span class="bar-value">85%</span>
+          </div>
+          <div class="score-row">
+            <span class="bar-label">Płynność (Fluency)</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:78%"></div></div>
+            <span class="bar-value">78%</span>
+          </div>
+          <div class="score-row">
+            <span class="bar-label">Gramatyka (Grammar)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:80%"></div></div>
+            <span class="bar-value">80%</span>
+          </div>
+          <div class="score-row">
+            <span class="bar-label">Słownictwo (Vocabulary)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:84%"></div></div>
+            <span class="bar-value">84%</span>
+          </div>
+          <div class="score-row">
+            <span class="bar-label">Realizacja zadania (Task)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:82%"></div></div>
+            <span class="bar-value">82%</span>
+          </div>
+        </div>
+
+        <div class="feedback-list">
+          <div class="feedback-item">
+            <span class="fb-icon" style="color:#FF3B30">&#9679;</span>
+            <span>Trudne słowo: <strong>'szczególnie'</strong> — spróbuj ponownie</span>
+            <div class="play-btn">&#9654;</div>
+          </div>
+          <div class="feedback-item">
+            <span class="fb-icon" style="color:#FFD60A">&#9679;</span>
+            <span>Akcent w <strong>'kawiarnia'</strong> — popraw nacisk na drugą sylabę</span>
+          </div>
+          <div class="feedback-item">
+            <span class="fb-icon" style="color:#34C759">&#9679;</span>
+            <span>Bardzo dobra intonacja pytań</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <div class="action-btn">&#9654; Odsłuchaj nagranie</div>
+          <div class="action-btn">&#128260; Porównaj z wzorem</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="bottom-nav-btn">&#9664; Zadanie poprzednie</div>
+    <div class="bottom-center">
+      <div class="bottom-dot active"></div>
+      <div class="bottom-dot"></div>
+      <div class="bottom-dot"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="bottom-nav-btn">Zadanie następne &#9654;</div>
+      <div class="end-exam-btn">Zakończ egzamin</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Generate waveform bars
+  const waveform = document.getElementById('waveform');
+  const barCount = 60;
+  for (let i = 0; i < barCount; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'wave-bar';
+    const progress = i / barCount;
+    // Simulate recorded audio: higher in the middle, taper at edges
+    const base = Math.sin(progress * Math.PI) * 0.7 + 0.3;
+    const variation = Math.sin(i * 0.8) * 0.3 + Math.cos(i * 1.3) * 0.2;
+    const hMin = Math.max(3, (base + variation * 0.5) * 18);
+    const hMax = Math.max(5, (base + variation) * 36);
+    bar.style.setProperty('--h-min', hMin + 'px');
+    bar.style.setProperty('--h-max', hMax + 'px');
+    bar.style.animationDelay = (i * 0.06) + 's';
+    // Color: active bars are red, future bars dimmer
+    if (progress < 0.46) {
+      bar.style.background = 'linear-gradient(180deg, #FF3B30, rgba(255,59,48,0.4))';
+    } else {
+      bar.style.background = 'rgba(255,255,255,0.1)';
+      bar.style.animation = 'none';
+      bar.style.height = hMin + 'px';
+    }
+    waveform.appendChild(bar);
+  }
+</script>
+
+</body>
+</html>
