@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --primary: #1a365d;
+  --primary-light: #2b6cb0;
+  --accent: #c53030;
+  --accent-light: #fc8181;
+  --bg-light: #f7fafc;
+  --bg-warm: #fffaf0;
+  --border: #e2e8f0;
+  --text: #2d3748;
+  --text-light: #718096;
+  --success: #276749;
+}
+
+@page {
+  size: A4;
+  margin: 25mm 20mm 25mm 20mm;
+
+  @bottom-center {
+    content: counter(page);
+    font-family: 'Inter', sans-serif;
+    font-size: 9pt;
+    color: var(--text-light);
+  }
+}
+
+@page :first {
+  margin-top: 40mm;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.65;
+  color: var(--text);
+  max-width: 100%;
+}
+
+/* Title */
+h1 {
+  font-size: 24pt;
+  font-weight: 700;
+  color: var(--primary);
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 12px;
+  margin-top: 0;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+/* Subtitle / blockquote right after title */
+h1 + blockquote {
+  font-size: 13pt;
+  color: var(--primary-light);
+  border-left: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+  font-style: italic;
+  font-weight: 400;
+}
+
+h1 + blockquote + p {
+  font-size: 9pt;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+/* Section headers */
+h2 {
+  font-size: 16pt;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 32px;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-light);
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 13pt;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin-top: 24px;
+  margin-bottom: 10px;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 18px;
+  margin-bottom: 8px;
+  page-break-after: avoid;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 8px;
+  orphans: 3;
+  widows: 3;
+}
+
+/* Links */
+a {
+  color: var(--primary-light);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px 0;
+  font-size: 9.5pt;
+  page-break-inside: avoid;
+}
+
+thead {
+  background: var(--primary);
+  color: white;
+}
+
+th {
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:nth-child(even) {
+  background: var(--bg-light);
+}
+
+/* Bold text in tables for emphasis */
+td strong {
+  color: var(--primary);
+}
+
+/* Blockquotes — used for warnings and tips */
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--bg-warm);
+  margin: 14px 0;
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  font-size: 10pt;
+  page-break-inside: avoid;
+}
+
+blockquote p {
+  margin: 4px 0;
+}
+
+blockquote strong {
+  color: var(--accent);
+}
+
+/* Lists */
+ul, ol {
+  margin: 8px 0 12px 0;
+  padding-left: 24px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+li > ul, li > ol {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+/* Inline code */
+code {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 9pt;
+  background: var(--bg-light);
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* Horizontal rules */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+/* Strong emphasis */
+strong {
+  font-weight: 600;
+}
+
+/* Section: Table of Contents */
+h2#table-of-contents + ol,
+h2#table-of-contents + ul {
+  columns: 2;
+  column-gap: 24px;
+  font-size: 9.5pt;
+}
+
+/* Page breaks before major sections */
+h2 {
+  page-break-before: auto;
+}
+
+/* Keep tables and headers together */
+h3 + table,
+h4 + table,
+p + table {
+  page-break-before: avoid;
+}
+
+/* Em dash styling */
+em {
+  font-style: italic;
+  color: var(--text);
+}
+
+/* Nested blockquotes for secondary tips */
+blockquote blockquote {
+  border-left-color: var(--primary-light);
+  background: var(--bg-light);
+}
