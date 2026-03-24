@@ -16,7 +16,7 @@
   --bg: #eef3ee;
   --bg-card: rgba(255,255,255,0.62);
   --bg-card-border: rgba(255,255,255,0.3);
-  --bg-nav: rgba(238,243,238,0.92);
+  --bg-nav: rgba(240,245,240,0.88);
   --bg-tab: rgba(255,255,255,0.72);
   --text: #1a2e22;
   --text-secondary: #4a6352;
@@ -45,8 +45,9 @@
   --drag-border: rgba(45,138,94,0.2);
   --toggle-checked: #2d8a5e;
   --avatar-gradient: linear-gradient(135deg, #2d8a5e, #3da672);
-  --ipad-bg: #eef3ee;
-  --body-bg: #12261a;
+  --ipad-bg: linear-gradient(160deg, #f2f7f2 0%, #e8f0e4 35%, #f5efe6 70%, #eef3ee 100%);
+  --ipad-bg-color: #eef3ee;
+  --body-bg: linear-gradient(135deg, #0c1a12 0%, #1a3025 40%, #2a1e14 100%);
   --page-title-color: #d0e0d5;
   --page-title-accent: #3da672;
   --ipad-shadow: 0 0 0 3px #1e3a28, 0 20px 80px rgba(0,0,0,0.5);
@@ -81,7 +82,7 @@
   --bg: #1a2c22;
   --bg-card: rgba(30,50,38,0.65);
   --bg-card-border: rgba(255,255,255,0.1);
-  --bg-nav: rgba(22,38,28,0.92);
+  --bg-nav: rgba(24,40,30,0.88);
   --bg-tab: rgba(28,46,34,0.85);
   --text: #e8f0eb;
   --text-secondary: #a8c4b0;
@@ -96,8 +97,9 @@
   --drop-zone-bg: rgba(50,150,100,0.04);
   --word-bank-bg: rgba(224,140,60,0.08);
   --word-bank-border: rgba(224,140,60,0.18);
-  --ipad-bg: #1a2c22;
-  --body-bg: #0c1a12;
+  --ipad-bg: linear-gradient(160deg, #1a2c22 0%, #1e3328 35%, #252a1e 70%, #1c2820 100%);
+  --ipad-bg-color: #1a2c22;
+  --body-bg: linear-gradient(135deg, #060e0a 0%, #0e1e14 40%, #1a1208 100%);
   --page-title-color: #b0ccb8;
   --ipad-shadow: 0 0 0 3px #1e3a28, 0 20px 80px rgba(0,0,0,0.5), 0 0 40px rgba(45,138,94,0.06);
   --scrollbar-thumb: rgba(45,138,94,0.25);
@@ -130,6 +132,7 @@
 
 body {
   background: var(--body-bg);
+  background-attachment: fixed;
   font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
   display: flex;
@@ -139,7 +142,7 @@ body {
   min-height: 100vh;
   padding: 20px;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background 0.5s ease, color 0.3s ease;
 }
 
 /* ========== PAGE TITLE ========== */
