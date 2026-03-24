@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PolskiPro — Interactive Prototype</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+#ipad-frame{width:820px;height:1100px;background:#f5e6c8;border-radius:24px;box-shadow:0 0 60px rgba(0,0,0,.5);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(max-width:860px){#ipad-frame{width:100vw;height:100vh;border-radius:0}}
+@media(max-height:1140px) and (min-width:861px){#ipad-frame{height:96vh}}
+
+/* Status bar */
+.status-bar{height:28px;background:#f5e6c8;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:12px;color:#5d4037;flex-shrink:0}
+
+/* Top nav */
+.top-nav{height:52px;display:flex;align-items:center;padding:0 16px;flex-shrink:0;position:relative}
+.top-nav .back-btn{font-size:28px;color:#5d4037;cursor:pointer;width:40px;text-align:left;line-height:1;user-select:none}
+.top-nav .back-btn:hover{opacity:.7}
+.top-nav .title{flex:1;text-align:center;font-size:20px;font-weight:700;color:#3e2723}
+.top-nav .spacer{width:40px}
+
+/* Content area */
+.content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb{background:#c9a96e;border-radius:2px}
+
+/* Bottom tab bar */
+.tab-bar{height:64px;background:#efe0c4;border-top:1px solid #d4c4a0;display:flex;flex-shrink:0}
+.tab-bar .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#8d6e63;transition:color .15s;user-select:none}
+.tab-bar .tab.active{color:#5d4037}
+.tab-bar .tab svg{width:26px;height:26px;margin-bottom:2px}
+.tab-bar .tab span{font-size:11px;font-weight:600}
+
+/* Screen visibility */
+.screen{display:none}
+.screen.active{display:block}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e0d5c0;border-radius:14px;padding:18px;margin-bottom:14px;cursor:pointer;transition:transform .1s,box-shadow .1s}
+.card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.card:active{transform:scale(.98)}
+.card-title{font-size:17px;font-weight:700;color:#3e2723;margin-bottom:4px}
+.card-desc{font-size:13px;color:#6d4c41}
+
+/* Grid cards */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.card-grid .card{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;text-align:center}
+.card-grid .card-icon{font-size:40px;margin-bottom:10px}
+
+/* List items */
+.list-item{background:#fff;border:1px solid #e0d5c0;border-radius:12px;padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;cursor:pointer;transition:background .1s}
+.list-item:hover{background:#fdf6e8}
+.list-item:active{background:#f5e6c8}
+.list-item-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-right:14px;flex-shrink:0;background:#f5e6c8}
+.list-item-text{flex:1;font-size:16px;font-weight:600;color:#3e2723}
+.list-item-arrow{color:#a1887f;font-size:20px}
+
+/* Section headers */
+.section-header{font-size:22px;font-weight:700;color:#3e2723;margin:20px 0 12px}
+.section-subheader{font-size:14px;color:#8d6e63;margin-bottom:14px}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:16px;background:#5d4037;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;transition:background .15s}
+.btn:hover{background:#4e342e}
+.btn:active{background:#3e2723}
+.btn-outline{background:transparent;border:2px solid #5d4037;color:#5d4037}
+.btn-outline:hover{background:#5d40370d}
+.btn-sm{padding:10px 20px;font-size:14px;width:auto;display:inline-block}
+
+/* Progress bars */
+.progress-row{display:flex;align-items:center;margin-bottom:12px}
+.progress-label{width:100px;font-size:14px;font-weight:600;color:#5d4037}
+.progress-bar{flex:1;height:10px;background:#e0d5c0;border-radius:5px;overflow:hidden;margin:0 12px}
+.progress-fill{height:100%;background:#ff8f00;border-radius:5px;transition:width .3s}
+.progress-val{font-size:14px;color:#8d6e63;width:50px;text-align:right}
+
+/* Result cards */
+.result-card{background:#fff;border:1px solid #e0d5c0;border-radius:14px;padding:18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.result-card .label{font-size:16px;font-weight:600;color:#3e2723}
+.result-card .value{font-size:24px;font-weight:800;color:#ff8f00}
+
+/* Profile */
+.profile-section{background:#fff;border:1px solid #e0d5c0;border-radius:14px;padding:18px;margin-bottom:14px}
+.profile-name{font-size:22px;font-weight:700;color:#3e2723}
+.profile-email{font-size:14px;color:#8d6e63;margin-top:2px}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0e6d4}
+.profile-row:last-child{border-bottom:none}
+.profile-row .label{font-size:14px;color:#5d4037}
+.profile-row .value{font-size:14px;color:#8d6e63;font-weight:600}
+
+/* Toggle switch */
+.toggle{width:50px;height:28px;background:#ccc;border-radius:14px;position:relative;cursor:pointer;transition:background .2s}
+.toggle.on{background:#ff8f00}
+.toggle::after{content:'';width:24px;height:24px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s}
+.toggle.on::after{left:24px}
+
+/* Exercise styles */
+.exercise-instruction{font-style:italic;color:#6d4c41;margin-bottom:16px;font-size:15px;line-height:1.5}
+.exercise-text{background:#fff;border:1px solid #e0d5c0;border-radius:12px;padding:16px;margin-bottom:16px;font-size:15px;line-height:1.7;color:#3e2723}
+.example-badge{display:inline-block;background:#ff8f00;color:#fff;padding:2px 10px;border-radius:8px;font-size:12px;font-weight:700;margin-bottom:8px}
+.question-group{margin-bottom:18px}
+.question-label{font-size:15px;font-weight:600;color:#3e2723;margin-bottom:8px}
+.radio-group{display:flex;flex-direction:column;gap:6px}
+.radio-option{display:flex;align-items:center;padding:10px 14px;background:#fff;border:2px solid #e0d5c0;border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s;font-size:14px;color:#3e2723}
+.radio-option:hover{border-color:#c9a96e}
+.radio-option.selected{border-color:#4caf50;background:#e8f5e9}
+.radio-option .dot{width:20px;height:20px;border:2px solid #bbb;border-radius:50%;margin-right:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.radio-option.selected .dot{border-color:#4caf50}
+.radio-option.selected .dot::after{content:'';width:10px;height:10px;background:#4caf50;border-radius:50%}
+
+/* PF buttons */
+.pf-group{display:flex;gap:8px;margin-top:6px}
+.pf-btn{padding:8px 18px;border:2px solid #e0d5c0;border-radius:8px;background:#fff;cursor:pointer;font-weight:600;font-size:14px;color:#5d4037;transition:all .15s}
+.pf-btn:hover{border-color:#c9a96e}
+.pf-btn.selected-p{border-color:#4caf50;background:#e8f5e9;color:#2e7d32}
+.pf-btn.selected-f{border-color:#f44336;background:#ffebee;color:#c62828}
+.pf-btn.selected-b{border-color:#ff8f00;background:#fff3e0;color:#e65100}
+
+/* Drag items */
+.drag-item{background:#fff;border:2px solid #e0d5c0;border-radius:10px;padding:12px 16px;margin-bottom:8px;cursor:grab;font-size:14px;color:#3e2723;display:flex;align-items:center;user-select:none;transition:box-shadow .15s}
+.drag-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.drag-item .num{width:28px;height:28px;background:#5d4037;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-right:12px;flex-shrink:0}
+
+/* Fill blank */
+.fill-blank{display:inline;border-bottom:2px solid #5d4037;min-width:80px;padding:2px 4px;color:#5d4037;font-weight:600}
+.fill-input{border:none;border-bottom:2px solid #5d4037;background:transparent;font-size:15px;color:#5d4037;font-weight:600;width:120px;padding:2px 4px;outline:none}
+.fill-input:focus{border-color:#ff8f00}
+
+/* Word bank */
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;padding:14px;background:#fff;border:1px solid #e0d5c0;border-radius:12px}
+.word-chip{padding:6px 14px;background:#f5e6c8;border:1px solid #d4c4a0;border-radius:20px;font-size:14px;color:#3e2723;cursor:pointer;transition:background .15s}
+.word-chip:hover{background:#e8d5b0}
+.word-chip.used{opacity:.4;pointer-events:none}
+
+/* Pisanie */
+.task-card{background:#fff;border:1px solid #e0d5c0;border-radius:14px;padding:18px;margin-bottom:14px}
+.task-card h4{font-size:16px;font-weight:700;color:#3e2723;margin-bottom:6px}
+.task-card p{font-size:14px;color:#6d4c41;line-height:1.5}
+.task-textarea{width:100%;min-height:120px;border:2px solid #e0d5c0;border-radius:10px;padding:12px;font-size:15px;font-family:inherit;color:#3e2723;resize:vertical;outline:none}
+.task-textarea:focus{border-color:#ff8f00}
+
+/* Timer */
+.timer-bar{background:#5d4037;color:#fff;padding:10px 18px;border-radius:10px;font-size:16px;font-weight:600;text-align:center;margin-bottom:16px}
+
+/* Photo placeholder */
+.photo-placeholder{width:100%;height:200px;background:#e0d5c0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:48px;color:#8d6e63;margin-bottom:12px}
+
+/* Alphabet grid */
+.alpha-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.alpha-cell{background:#fff;border:1px solid #e0d5c0;border-radius:12px;padding:14px 8px;text-align:center}
+.alpha-letter{font-size:24px;font-weight:700;color:#3e2723}
+.alpha-word{font-size:12px;color:#8d6e63;margin-top:4px}
+
+/* FAQ */
+.faq-item{background:#fff;border:1px solid #e0d5c0;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq-header{padding:16px;font-size:16px;font-weight:600;color:#3e2723;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-header:hover{background:#fdf6e8}
+.faq-body{padding:0 16px 16px;font-size:14px;color:#6d4c41;line-height:1.6;display:none}
+.faq-item.open .faq-body{display:block}
+
+/* Exam schedule */
+.exam-item{background:#fff;border:1px solid #e0d5c0;border-radius:12px;padding:16px;margin-bottom:10px}
+.exam-date{font-size:18px;font-weight:700;color:#3e2723}
+.exam-level{font-size:14px;color:#ff8f00;font-weight:600;margin-top:2px}
+.exam-location{font-size:13px;color:#8d6e63;margin-top:4px}
+
+/* Zestawy */
+.zestaw-card{background:#fff;border:1px solid #e0d5c0;border-radius:14px;padding:18px;margin-bottom:14px}
+.zestaw-title{font-size:18px;font-weight:700;color:#3e2723;margin-bottom:10px}
+.zestaw-task{margin-bottom:8px}
+.zestaw-task strong{color:#5d4037}
+.zestaw-task p{font-size:14px;color:#6d4c41;margin-top:2px;line-height:1.4}
+
+/* Audio button */
+.audio-btn{width:48px;height:48px;background:#5d4037;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:10px;transition:background .15s}
+.audio-btn:hover{background:#4e342e}
+.audio-btn svg{width:22px;height:22px;fill:#fff}
+
+/* Utility */
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mb-16{margin-bottom:16px}
+.text-center{text-align:center}
+.text-muted{color:#8d6e63;font-size:13px}
+.divider{height:1px;background:#e0d5c0;margin:16px 0}
+</style>
+</head>
+<body>
+
+<div id="ipad-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>PolskiPro</span>
+    <span>100%</span>
+  </div>
+
+  <!-- Top Nav -->
+  <div class="top-nav" id="topNav">
+    <div class="back-btn" id="backBtn" style="visibility:hidden" onclick="goBack()">&#x2039;</div>
+    <div class="title" id="topTitle">PolskiPro</div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content" id="contentArea">
+
+    <!-- ========== TAB 1: GŁÓWNA ========== -->
+    <div class="screen active" id="screen-home">
+      <div class="card-grid">
+        <div class="card" onclick="navigateTo('screen-cwiczenia-list','Ćwiczenia')">
+          <div class="card-icon">&#128221;</div>
+          <div class="card-title">Tryb ćwiczeń</div>
+          <div class="card-desc">Rozpocznij ćwiczenia</div>
+        </div>
+        <div class="card" onclick="navigateTo('screen-faq','Pomoc i FAQ')">
+          <div class="card-icon">&#10067;</div>
+          <div class="card-title">Pomoc i FAQ</div>
+          <div class="card-desc">Często zadawane pytania</div>
+        </div>
+        <div class="card" onclick="navigateTo('screen-harmonogram','Harmonogram egzaminów')">
+          <div class="card-icon">&#128197;</div>
+          <div class="card-title">Harmonogram egzaminów</div>
+          <div class="card-desc">Terminy i lokalizacje</div>
+        </div>
+        <div class="card" onclick="navigateTo('screen-alfabet','Przewodnik gramatyczny')">
+          <div class="card-icon">&#128214;</div>
+          <div class="card-title">Przewodnik gramatyczny</div>
+          <div class="card-desc">Alfabet i więcej</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TAB 2: ĆWICZENIA LIST ========== -->
+    <div class="screen" id="screen-cwiczenia-list">
+      <div class="section-header">Ćwiczenia</div>
+      <div class="list-item" onclick="navigateTo('screen-sluchanie','Rozumienie ze słuchu')">
+        <div class="list-item-icon">&#127911;</div>
+        <div class="list-item-text">Rozumienie ze słuchu</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-czytanie-list','Rozumienie tekstu')">
+        <div class="list-item-icon">&#128196;</div>
+        <div class="list-item-text">Rozumienie tekstu</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gramatyka-main','Gramatyka')">
+        <div class="list-item-icon">&#9998;</div>
+        <div class="list-item-text">Gramatyka</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-pisanie-zestawy','Pisanie')">
+        <div class="list-item-icon">&#128394;</div>
+        <div class="list-item-text">Pisanie</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-mowienie','Mówienie')">
+        <div class="list-item-icon">&#128483;</div>
+        <div class="list-item-text">Mówienie</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+    </div>
+
+    <!-- ========== ROZUMIENIE ZE SŁUCHU ========== -->
+    <div class="screen" id="screen-sluchanie">
+      <div class="section-header">Wybór wielokrotny</div>
+      <div class="exercise-instruction">Wysłuchaj nagrania, a następnie wybierz poprawną odpowiedź (A, B lub C).</div>
+
+      <div class="question-group">
+        <span class="example-badge">Przykład</span>
+        <div class="question-label">0. Gdzie odbywa się rozmowa?</div>
+        <div class="audio-btn" onclick="alert('Odtwarzanie nagrania...')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="radio-group" data-group="s0">
+          <div class="radio-option selected" onclick="selectRadio(this)"><div class="dot"></div>A. W sklepie</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. W restauracji</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Na dworcu</div>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">1. Co zamawia kobieta?</div>
+        <div class="audio-btn" onclick="alert('Odtwarzanie nagrania...')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="radio-group" data-group="s1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. Herbatę z mlekiem</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. Kawę z cukrem</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Sok pomarańczowy</div>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">2. Kiedy odjeżdża pociąg do Krakowa?</div>
+        <div class="audio-btn" onclick="alert('Odtwarzanie nagrania...')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="radio-group" data-group="s2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. O godzinie 8:30</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. O godzinie 9:15</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. O godzinie 10:00</div>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">3. Dlaczego mężczyzna jest spóźniony?</div>
+        <div class="audio-btn" onclick="alert('Odtwarzanie nagrania...')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="radio-group" data-group="s3">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. Był korek na drodze</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. Zaspał</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Autobus się zepsuł</div>
+        </div>
+      </div>
+
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- ========== ROZUMIENIE TEKSTU — LIST ========== -->
+    <div class="screen" id="screen-czytanie-list">
+      <div class="section-header">Rozumienie tekstu</div>
+      <div class="list-item" onclick="navigateTo('screen-cz-dopasuj-frag','Dopasuj odpowiedzi do fragmentu')">
+        <div class="list-item-icon">1</div>
+        <div class="list-item-text">Dopasuj odpowiedzi do fragmentu</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-dopasuj-syt','Dopasuj odpowiedzi do sytuacji')">
+        <div class="list-item-icon">2</div>
+        <div class="list-item-text">Dopasuj odpowiedzi do sytuacji</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-pf','Prawda / Fałsz / Brak informacji')">
+        <div class="list-item-icon">3</div>
+        <div class="list-item-text">Prawda / Fałsz / Brak informacji</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-uloz','Ułóż fragmenty w logiczną całość')">
+        <div class="list-item-icon">4</div>
+        <div class="list-item-text">Ułóż fragmenty w logiczną całość</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-uzupelnij-frag','Uzupełnij tekst fragmentami')">
+        <div class="list-item-icon">5</div>
+        <div class="list-item-text">Uzupełnij tekst fragmentami</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-uzupelnij-slow','Uzupełnij tekst słowami')">
+        <div class="list-item-icon">6</div>
+        <div class="list-item-text">Uzupełnij tekst słowami</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-polacz','Połącz fragmenty')">
+        <div class="list-item-icon">7</div>
+        <div class="list-item-text">Połącz fragmenty</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-cz-wybierz','Uzupełnij tekst, wybierając słowa')">
+        <div class="list-item-icon">8</div>
+        <div class="list-item-text">Uzupełnij tekst, wybierając słowa</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+    </div>
+
+    <!-- CZ Exercise: Dopasuj odpowiedzi do fragmentu -->
+    <div class="screen" id="screen-cz-dopasuj-frag">
+      <div class="section-header">Dopasuj odpowiedzi do fragmentu</div>
+      <div class="exercise-instruction">Przeczytaj tekst, a następnie wybierz poprawną odpowiedź (A, B lub C).</div>
+      <div class="exercise-text">
+        <strong>Fragment 1.</strong><br>
+        Warszawa jest stolicą Polski i największym miastem w kraju. Liczy ponad 1,8 miliona mieszkańców. Miasto jest znane z bogatej historii, licznych muzeów i pięknych parków. Jednym z najbardziej znanych miejsc jest Stare Miasto, które zostało odbudowane po II wojnie światowej.
+      </div>
+      <div class="question-group">
+        <span class="example-badge">Przykład</span>
+        <div class="question-label">0. Warszawa jest...</div>
+        <div class="radio-group" data-group="cz1-0">
+          <div class="radio-option selected" onclick="selectRadio(this)"><div class="dot"></div>A. stolicą Polski</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. najmniejszym miastem</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. miastem na południu</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">1. Stare Miasto w Warszawie...</div>
+        <div class="radio-group" data-group="cz1-1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. nigdy nie było zniszczone</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. zostało odbudowane po wojnie</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. jest nową dzielnicą</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Dopasuj odpowiedzi do sytuacji -->
+    <div class="screen" id="screen-cz-dopasuj-syt">
+      <div class="section-header">Dopasuj odpowiedzi do sytuacji</div>
+      <div class="exercise-instruction">Przeczytaj sytuację i wybierz najlepszą odpowiedź.</div>
+      <div class="question-group">
+        <div class="question-label">1. Jesteś w sklepie. Chcesz kupić chleb. Co mówisz?</div>
+        <div class="radio-group" data-group="syt1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. Poproszę jeden chleb.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. Czy mogę dostać rachunek?</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Gdzie jest przystanek?</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Jesteś na poczcie. Chcesz wysłać list do Niemiec. Co mówisz?</div>
+        <div class="radio-group" data-group="syt2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. Chciałbym zamówić pizzę.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. Ile kosztuje znaczek do Niemiec?</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Czy jest tutaj apteka?</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">3. Dzwonisz do lekarza. Chcesz umówić się na wizytę. Co mówisz?</div>
+        <div class="radio-group" data-group="syt3">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. Chciałbym zarezerwować stolik.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. Czy mogę umówić się na wizytę?</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. Poproszę bilet w jedną stronę.</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Prawda/Fałsz -->
+    <div class="screen" id="screen-cz-pf">
+      <div class="section-header">Prawda / Fałsz / Brak informacji</div>
+      <div class="exercise-instruction">Przeczytaj tekst, a następnie zaznacz: Prawda (P), Fałsz (F) lub Brak informacji (B).</div>
+      <div class="exercise-text">
+        Maria mieszka w Krakowie od pięciu lat. Pracuje jako nauczycielka języka angielskiego w szkole podstawowej. Codziennie rano biegnie w parku, a wieczorami czyta książki. W weekendy często odwiedza swoich rodziców, którzy mieszkają w Tarnowie. Maria lubi gotować i często przygotowuje tradycyjne polskie potrawy.
+      </div>
+      <div class="question-group">
+        <div class="question-label">1. Maria mieszka w Krakowie od trzech lat.</div>
+        <div class="pf-group">
+          <div class="pf-btn" onclick="selectPF(this,'p')">P</div>
+          <div class="pf-btn" onclick="selectPF(this,'f')">F</div>
+          <div class="pf-btn" onclick="selectPF(this,'b')">B</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Maria jest nauczycielką języka angielskiego.</div>
+        <div class="pf-group">
+          <div class="pf-btn" onclick="selectPF(this,'p')">P</div>
+          <div class="pf-btn" onclick="selectPF(this,'f')">F</div>
+          <div class="pf-btn" onclick="selectPF(this,'b')">B</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">3. Maria biega rano w lesie.</div>
+        <div class="pf-group">
+          <div class="pf-btn" onclick="selectPF(this,'p')">P</div>
+          <div class="pf-btn" onclick="selectPF(this,'f')">F</div>
+          <div class="pf-btn" onclick="selectPF(this,'b')">B</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">4. Rodzice Marii mieszkają w Tarnowie.</div>
+        <div class="pf-group">
+          <div class="pf-btn" onclick="selectPF(this,'p')">P</div>
+          <div class="pf-btn" onclick="selectPF(this,'f')">F</div>
+          <div class="pf-btn" onclick="selectPF(this,'b')">B</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">5. Maria ma dwoje dzieci.</div>
+        <div class="pf-group">
+          <div class="pf-btn" onclick="selectPF(this,'p')">P</div>
+          <div class="pf-btn" onclick="selectPF(this,'f')">F</div>
+          <div class="pf-btn" onclick="selectPF(this,'b')">B</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Ułóż fragmenty -->
+    <div class="screen" id="screen-cz-uloz">
+      <div class="section-header">Ułóż fragmenty w logiczną całość</div>
+      <div class="exercise-instruction">Przeciągnij fragmenty tekstu, aby ułożyć je w logicznej kolejności.</div>
+      <div id="dragContainer">
+        <div class="drag-item" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)">
+          <div class="num">1</div>
+          <span>Następnego dnia rano Ewa wstała wcześnie i pojechała na lotnisko.</span>
+        </div>
+        <div class="drag-item" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)">
+          <div class="num">2</div>
+          <span>Wieczorem spakowała walizkę i sprawdziła dokumenty.</span>
+        </div>
+        <div class="drag-item" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)">
+          <div class="num">3</div>
+          <span>Ewa od dawna marzyła o podróży do Włoch.</span>
+        </div>
+        <div class="drag-item" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)">
+          <div class="num">4</div>
+          <span>W końcu kupiła bilet lotniczy do Rzymu.</span>
+        </div>
+        <div class="drag-item" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)">
+          <div class="num">5</div>
+          <span>Po trzech godzinach lotu samolot wylądował we Włoszech.</span>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam kolejność...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Uzupełnij tekst fragmentami -->
+    <div class="screen" id="screen-cz-uzupelnij-frag">
+      <div class="section-header">Uzupełnij tekst fragmentami</div>
+      <div class="exercise-instruction">Wstaw odpowiednie fragmenty (A–E) w luki w tekście.</div>
+      <div class="exercise-text">
+        Kraków jest jednym z najpiękniejszych miast w Polsce. <span class="fill-blank">[1]</span> Każdego roku przyjeżdża tu wiele turystów z całego świata. <span class="fill-blank">[2]</span> Warto też zobaczyć Zamek Królewski na Wawelu. <span class="fill-blank">[3]</span> Kraków słynie również z doskonałej kuchni.
+      </div>
+      <div class="word-bank">
+        <div class="word-chip" onclick="this.classList.toggle('used')">A. Miasto ma bogatą historię sięgającą średniowiecza.</div>
+        <div class="word-chip" onclick="this.classList.toggle('used')">B. Najbardziej znany jest Rynek Główny.</div>
+        <div class="word-chip" onclick="this.classList.toggle('used')">C. Jest to jeden z największych zamków w Europie.</div>
+        <div class="word-chip" onclick="this.classList.toggle('used')">D. Kraków leży nad rzeką Wisłą.</div>
+        <div class="word-chip" onclick="this.classList.toggle('used')">E. W mieście jest wiele nowoczesnych budynków.</div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Uzupełnij tekst słowami -->
+    <div class="screen" id="screen-cz-uzupelnij-slow">
+      <div class="section-header">Uzupełnij tekst słowami</div>
+      <div class="exercise-instruction">Uzupełnij luki w tekście odpowiednimi słowami z ramki.</div>
+      <div class="word-bank">
+        <div class="word-chip">mieszka</div>
+        <div class="word-chip">pracuje</div>
+        <div class="word-chip">lubi</div>
+        <div class="word-chip">codziennie</div>
+        <div class="word-chip">często</div>
+        <div class="word-chip">bardzo</div>
+      </div>
+      <div class="exercise-text">
+        Tomek <input type="text" class="fill-input" placeholder="..."> w Warszawie od dwóch lat. <input type="text" class="fill-input" placeholder="..."> jako informatyk w dużej firmie. <input type="text" class="fill-input" placeholder="..."> rano wstaje o siódmej. Tomek <input type="text" class="fill-input" placeholder="..."> sport i <input type="text" class="fill-input" placeholder="..."> gra w piłkę nożną. Jest <input type="text" class="fill-input" placeholder="..."> zadowolony ze swojego życia.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Połącz fragmenty -->
+    <div class="screen" id="screen-cz-polacz">
+      <div class="section-header">Połącz fragmenty</div>
+      <div class="exercise-instruction">Połącz początek zdania (po lewej) z odpowiednim zakończeniem (po prawej).</div>
+      <div class="question-group">
+        <div class="question-label">1. Kiedy pada deszcz, ...</div>
+        <div class="radio-group" data-group="pol1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. idę na spacer do parku.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. zostaję w domu i czytam książkę.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. gram w piłkę na boisku.</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Pojechaliśmy nad morze, ...</div>
+        <div class="radio-group" data-group="pol2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. bo chcieliśmy odpocząć.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. więc poszliśmy do kina.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. ale nie lubię pływać.</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">3. Kupiłem nowy komputer, ...</div>
+        <div class="radio-group" data-group="pol3">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. ponieważ stary się zepsuł.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. dlatego wyrzuciłem telewizor.</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. żeby kupić samochód.</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- CZ Exercise: Uzupełnij tekst, wybierając słowa -->
+    <div class="screen" id="screen-cz-wybierz">
+      <div class="section-header">Uzupełnij tekst, wybierając słowa</div>
+      <div class="exercise-instruction">Wybierz poprawne słowo, aby uzupełnić zdanie.</div>
+      <div class="question-group">
+        <div class="question-label">1. Wczoraj byłem w kinie i widziałem bardzo ___ film.</div>
+        <div class="radio-group" data-group="wyb1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. ciekawy</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. ciekawą</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. ciekawe</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Moja siostra ___ w Krakowie od trzech lat.</div>
+        <div class="radio-group" data-group="wyb2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. mieszkam</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. mieszka</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. mieszkasz</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">3. Poszliśmy do ___ restauracji na obiad.</div>
+        <div class="radio-group" data-group="wyb3">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. nowy</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. nowej</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. nowego</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- ========== GRAMATYKA MAIN ========== -->
+    <div class="screen" id="screen-gramatyka-main">
+      <div class="section-header">Gramatyka</div>
+      <div class="card" onclick="navigateTo('screen-gram-bledy','Ćwiczenia na podstawie błędów')">
+        <div class="card-title">&#128308; Ćwiczenia na podstawie błędów</div>
+        <div class="card-desc">Powtórz tematy, w których popełniłeś błędy</div>
+      </div>
+      <div class="card" onclick="navigateTo('screen-gram-tematy','Ćwiczenia według tematów')">
+        <div class="card-title">&#128218; Ćwiczenia według tematów</div>
+        <div class="card-desc">Wybierz temat gramatyczny do ćwiczenia</div>
+      </div>
+    </div>
+
+    <!-- Gramatyka: Błędy screen -->
+    <div class="screen" id="screen-gram-bledy">
+      <div class="section-header">Ćwiczenia na podstawie błędów</div>
+      <div class="exercise-text">
+        <p style="text-align:center;padding:30px 0;color:#8d6e63">
+          &#128079; Gratulacje!<br><br>
+          Nie masz żadnych błędów do powtórzenia. Kontynuuj naukę, aby utrzymać swoje wyniki!
+        </p>
+      </div>
+    </div>
+
+    <!-- Gramatyka: Tematy list -->
+    <div class="screen" id="screen-gram-tematy">
+      <div class="section-header">Ćwiczenia według tematów</div>
+      <div class="list-item" onclick="navigateTo('screen-gram-odmiana','Odmiana rzeczownika i przymiotnika')">
+        <div class="list-item-icon">1</div>
+        <div class="list-item-text">Odmiana rzeczownika i przymiotnika</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-stopniowanie','Stopniowanie przymiotników i przysłówków')">
+        <div class="list-item-icon">2</div>
+        <div class="list-item-text">Stopniowanie przymiotników i przysłówków</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-czas-ter','Czas teraźniejszy i przyszły')">
+        <div class="list-item-icon">3</div>
+        <div class="list-item-text">Czas teraźniejszy i przyszły</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-czas-prz','Czas przeszły')">
+        <div class="list-item-icon">4</div>
+        <div class="list-item-text">Czas przeszły</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-czas-tp','Czas teraźniejszy i przeszły')">
+        <div class="list-item-icon">5</div>
+        <div class="list-item-text">Czas teraźniejszy i przeszły</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-aspekt','Aspekt czasownika')">
+        <div class="list-item-icon">6</div>
+        <div class="list-item-text">Aspekt czasownika</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-aspekt-tryby','Aspekt i tryby czasownika')">
+        <div class="list-item-icon">7</div>
+        <div class="list-item-text">Aspekt i tryby czasownika</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-rozkazujacy','Tryb rozkazujący')">
+        <div class="list-item-icon">8</div>
+        <div class="list-item-text">Tryb rozkazujący</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-przypuszczajacy','Tryb przypuszczający')">
+        <div class="list-item-icon">9</div>
+        <div class="list-item-text">Tryb przypuszczający</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-zaimki','Zaimki osobowe')">
+        <div class="list-item-icon">10</div>
+        <div class="list-item-text">Zaimki osobowe</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-przyimki','Przyimki')">
+        <div class="list-item-icon">11</div>
+        <div class="list-item-text">Przyimki</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-spojniki','Spójniki')">
+        <div class="list-item-icon">12</div>
+        <div class="list-item-text">Spójniki</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-pelna','Pełna odmiana')">
+        <div class="list-item-icon">13</div>
+        <div class="list-item-text">Pełna odmiana</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-liczebniki','Liczebniki')">
+        <div class="list-item-icon">14</div>
+        <div class="list-item-text">Liczebniki</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-pytania','Zadawanie pytań')">
+        <div class="list-item-icon">15</div>
+        <div class="list-item-text">Zadawanie pytań</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+      <div class="list-item" onclick="navigateTo('screen-gram-transformacje','Transformacje zdań')">
+        <div class="list-item-icon">16</div>
+        <div class="list-item-text">Transformacje zdań</div>
+        <div class="list-item-arrow">&#8250;</div>
+      </div>
+    </div>
+
+    <!-- Gramatyka Exercise: Odmiana rzeczownika -->
+    <div class="screen" id="screen-gram-odmiana">
+      <div class="section-header">Odmiana rzeczownika i przymiotnika</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednią formą wyrazu podanego w nawiasie.</div>
+      <span class="example-badge">Przykład</span>
+      <div class="exercise-text">
+        0. Wczoraj rozmawiałem z <strong>nowym nauczycielem</strong> (nowy nauczyciel).
+      </div>
+      <div class="exercise-text">
+        1. Nie lubię <input type="text" class="fill-input" placeholder="..."> (zimna pogoda).<br><br>
+        2. Idę do <input type="text" class="fill-input" placeholder="..."> (duży sklep).<br><br>
+        3. Spotkałem się z <input type="text" class="fill-input" placeholder="..."> (stary przyjaciel).<br><br>
+        4. Mieszkam w <input type="text" class="fill-input" placeholder="..."> (małe miasto).<br><br>
+        5. Kupiłem prezent dla <input type="text" class="fill-input" placeholder="..."> (młoda siostra).
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Stopniowanie -->
+    <div class="screen" id="screen-gram-stopniowanie">
+      <div class="section-header">Stopniowanie przymiotników i przysłówków</div>
+      <div class="exercise-instruction">Uzupełnij zdania formą stopnia wyższego lub najwyższego.</div>
+      <div class="exercise-text">
+        1. Jan jest <input type="text" class="fill-input" placeholder="..."> (wysoki) od Piotra.<br><br>
+        2. Ta książka jest <input type="text" class="fill-input" placeholder="..."> (ciekawa) niż tamta.<br><br>
+        3. Wisła jest <input type="text" class="fill-input" placeholder="..."> (długa) rzeką w Polsce.<br><br>
+        4. Mój brat biegnie <input type="text" class="fill-input" placeholder="..."> (szybko) niż ja.<br><br>
+        5. To jest <input type="text" class="fill-input" placeholder="..."> (dobry) film, jaki widziałem.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Czas teraźniejszy i przyszły -->
+    <div class="screen" id="screen-gram-czas-ter">
+      <div class="section-header">Czas teraźniejszy i przyszły</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednią formą czasownika.</div>
+      <div class="exercise-text">
+        1. Ja <input type="text" class="fill-input" placeholder="..."> (czytać) książkę teraz.<br><br>
+        2. Jutro my <input type="text" class="fill-input" placeholder="..."> (jechać) do Gdańska.<br><br>
+        3. Oni <input type="text" class="fill-input" placeholder="..."> (robić) zakupy w sobotę.<br><br>
+        4. Czy ty <input type="text" class="fill-input" placeholder="..."> (mówić) po polsku?<br><br>
+        5. W przyszłym roku ona <input type="text" class="fill-input" placeholder="..."> (skończyć) studia.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Czas przeszły -->
+    <div class="screen" id="screen-gram-czas-prz">
+      <div class="section-header">Czas przeszły</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednią formą czasu przeszłego.</div>
+      <div class="exercise-text">
+        1. Wczoraj <input type="text" class="fill-input" placeholder="..."> (ja, być) w kinie.<br><br>
+        2. Maria <input type="text" class="fill-input" placeholder="..."> (kupić) nowe buty.<br><br>
+        3. Dzieci <input type="text" class="fill-input" placeholder="..."> (bawić się) w ogrodzie.<br><br>
+        4. My <input type="text" class="fill-input" placeholder="..."> (jeść) obiad o 13:00.<br><br>
+        5. Czy wy <input type="text" class="fill-input" placeholder="..."> (widzieć) ten film?
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Czas teraźniejszy i przeszły -->
+    <div class="screen" id="screen-gram-czas-tp">
+      <div class="section-header">Czas teraźniejszy i przeszły</div>
+      <div class="exercise-instruction">Wybierz poprawną formę czasownika.</div>
+      <div class="question-group">
+        <div class="question-label">1. Wczoraj ___ deszcz, ale dzisiaj ___ słońce.</div>
+        <div class="radio-group" data-group="tp1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. padał / świeci</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. pada / świeciło</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. padał / świeciło</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Kiedy byłem dzieckiem, ___ lody. Teraz ___ kawę.</div>
+        <div class="radio-group" data-group="tp2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. lubię / lubiłem</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. lubiłem / lubię</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>C. lubiłem / lubiłem</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Aspekt -->
+    <div class="screen" id="screen-gram-aspekt">
+      <div class="section-header">Aspekt czasownika</div>
+      <div class="exercise-instruction">Wybierz poprawny aspekt czasownika (dokonany lub niedokonany).</div>
+      <div class="question-group">
+        <div class="question-label">1. Codziennie ___ książki. (czytać / przeczytać)</div>
+        <div class="radio-group" data-group="asp1">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. czytam</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. przeczytam</div>
+        </div>
+      </div>
+      <div class="question-group">
+        <div class="question-label">2. Wczoraj ___ cały list do końca. (pisać / napisać)</div>
+        <div class="radio-group" data-group="asp2">
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>A. pisałem</div>
+          <div class="radio-option" onclick="selectRadio(this)"><div class="dot"></div>B. napisałem</div>
+        </div>
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Aspekt i tryby -->
+    <div class="screen" id="screen-gram-aspekt-tryby">
+      <div class="section-header">Aspekt i tryby czasownika</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednią formą czasownika.</div>
+      <div class="exercise-text">
+        1. Chciałbym, żebyś <input type="text" class="fill-input" placeholder="..."> (napisać) ten raport.<br><br>
+        2. Proszę, niech pan <input type="text" class="fill-input" placeholder="..."> (zamknąć) drzwi.<br><br>
+        3. Gdybym miał czas, <input type="text" class="fill-input" placeholder="..."> (pojechać) na wakacje.<br><br>
+        4. Mama prosiła, żebym <input type="text" class="fill-input" placeholder="..."> (kupić) chleb.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Tryb rozkazujący -->
+    <div class="screen" id="screen-gram-rozkazujacy">
+      <div class="section-header">Tryb rozkazujący</div>
+      <div class="exercise-instruction">Przekształć zdania na tryb rozkazujący.</div>
+      <div class="exercise-text">
+        <span class="example-badge">Przykład</span><br>
+        0. Musisz iść do domu. → <strong>Idź do domu!</strong><br><br>
+        1. Powinieneś otworzyć okno. → <input type="text" class="fill-input" style="width:200px" placeholder="..."><br><br>
+        2. Musicie być cicho. → <input type="text" class="fill-input" style="width:200px" placeholder="..."><br><br>
+        3. Powinniśmy zaczekać tutaj. → <input type="text" class="fill-input" style="width:200px" placeholder="..."><br><br>
+        4. Musisz przeczytać tę książkę. → <input type="text" class="fill-input" style="width:200px" placeholder="...">
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Tryb przypuszczający -->
+    <div class="screen" id="screen-gram-przypuszczajacy">
+      <div class="section-header">Tryb przypuszczający</div>
+      <div class="exercise-instruction">Uzupełnij zdania w trybie przypuszczającym.</div>
+      <div class="exercise-text">
+        1. Gdybym miał pieniądze, <input type="text" class="fill-input" placeholder="..."> (kupić) dom.<br><br>
+        2. Gdyby było ciepło, <input type="text" class="fill-input" placeholder="..."> (my, pójść) na plażę.<br><br>
+        3. Gdybyś uczył się więcej, <input type="text" class="fill-input" placeholder="..."> (zdać) egzamin.<br><br>
+        4. Gdyby ona znała język, <input type="text" class="fill-input" placeholder="..."> (pojechać) za granicę.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Zaimki osobowe -->
+    <div class="screen" id="screen-gram-zaimki">
+      <div class="section-header">Zaimki osobowe</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednim zaimkiem.</div>
+      <div class="exercise-text">
+        1. Dałem <input type="text" class="fill-input" placeholder="..."> (ona) książkę.<br><br>
+        2. Powiedz <input type="text" class="fill-input" placeholder="..."> (ja), co się stało.<br><br>
+        3. Pojadę z <input type="text" class="fill-input" placeholder="..."> (wy) na wakacje.<br><br>
+        4. Zadzwonię do <input type="text" class="fill-input" placeholder="..."> (on) jutro.<br><br>
+        5. Spotkamy się u <input type="text" class="fill-input" placeholder="..."> (oni) w domu.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Przyimki -->
+    <div class="screen" id="screen-gram-przyimki">
+      <div class="section-header">Przyimki</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednim przyimkiem.</div>
+      <div class="word-bank">
+        <div class="word-chip">w</div>
+        <div class="word-chip">na</div>
+        <div class="word-chip">do</div>
+        <div class="word-chip">z</div>
+        <div class="word-chip">od</div>
+        <div class="word-chip">dla</div>
+        <div class="word-chip">o</div>
+        <div class="word-chip">po</div>
+      </div>
+      <div class="exercise-text">
+        1. Idę <input type="text" class="fill-input" placeholder="..."> sklep.<br><br>
+        2. Mieszkam <input type="text" class="fill-input" placeholder="..."> Warszawie.<br><br>
+        3. Wracam <input type="text" class="fill-input" placeholder="..."> pracy o 17:00.<br><br>
+        4. To prezent <input type="text" class="fill-input" placeholder="..."> mamy.<br><br>
+        5. Rozmawiamy <input type="text" class="fill-input" placeholder="..."> pogodzie.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Spójniki -->
+    <div class="screen" id="screen-gram-spojniki">
+      <div class="section-header">Spójniki</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednim spójnikiem z ramki.</div>
+      <div class="word-bank" id="spojniki-bank">
+        <div class="word-chip">jednak</div>
+        <div class="word-chip">czy</div>
+        <div class="word-chip">bo</div>
+        <div class="word-chip">ale</div>
+        <div class="word-chip">i</div>
+        <div class="word-chip">a</div>
+        <div class="word-chip">albo</div>
+        <div class="word-chip">chociaż</div>
+        <div class="word-chip">żeby</div>
+        <div class="word-chip">że</div>
+        <div class="word-chip">więc</div>
+      </div>
+      <div class="exercise-text">
+        1. Lubię kawę <input type="text" class="fill-input" placeholder="..."> herbatę.<br><br>
+        2. Chciałem iść na spacer, <input type="text" class="fill-input" placeholder="..."> padał deszcz.<br><br>
+        3. Nie poszedłem do pracy, <input type="text" class="fill-input" placeholder="..."> byłem chory.<br><br>
+        4. Myślę, <input type="text" class="fill-input" placeholder="..."> to dobry pomysł.<br><br>
+        5. Uczę się polskiego, <input type="text" class="fill-input" placeholder="..."> zdać egzamin.<br><br>
+        6. Chcesz kawę <input type="text" class="fill-input" placeholder="..."> herbatę?<br><br>
+        7. Ja lubię lato, <input type="text" class="fill-input" placeholder="..."> moja siostra woli zimę.<br><br>
+        8. Było późno, <input type="text" class="fill-input" placeholder="..."> poszedłem spać.<br><br>
+        9. <input type="text" class="fill-input" placeholder="..."> pada deszcz, idę na spacer.<br><br>
+        10. Chciałbym pojechać, <input type="text" class="fill-input" placeholder="..."> nie mam czasu.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Pełna odmiana -->
+    <div class="screen" id="screen-gram-pelna">
+      <div class="section-header">Pełna odmiana</div>
+      <div class="exercise-instruction">Uzupełnij tabelę odmianami podanego wyrazu.</div>
+      <div class="exercise-text">
+        <strong>Odmień wyraz: "dobry kolega"</strong><br><br>
+        Mianownik (kto? co?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Dopełniacz (kogo? czego?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Celownik (komu? czemu?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Biernik (kogo? co?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Narzędnik (z kim? z czym?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Miejscownik (o kim? o czym?): <input type="text" class="fill-input" style="width:180px" placeholder="..."><br><br>
+        Wołacz: <input type="text" class="fill-input" style="width:180px" placeholder="...">
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Liczebniki -->
+    <div class="screen" id="screen-gram-liczebniki">
+      <div class="section-header">Liczebniki</div>
+      <div class="exercise-instruction">Uzupełnij zdania odpowiednią formą liczebnika.</div>
+      <div class="exercise-text">
+        1. W klasie jest <input type="text" class="fill-input" placeholder="..."> (25) uczniów.<br><br>
+        2. Mam <input type="text" class="fill-input" placeholder="..."> (2) siostry.<br><br>
+        3. Kupiłem <input type="text" class="fill-input" placeholder="..."> (5) jabłek.<br><br>
+        4. Spotkałem się z <input type="text" class="fill-input" placeholder="..."> (3) kolegami.<br><br>
+        5. Nie było <input type="text" class="fill-input" placeholder="..."> (4) studentów.
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Zadawanie pytań -->
+    <div class="screen" id="screen-gram-pytania">
+      <div class="section-header">Zadawanie pytań</div>
+      <div class="exercise-instruction">Ułóż pytanie do podkreślonej części zdania.</div>
+      <div class="exercise-text">
+        1. Maria mieszka <u>w Krakowie</u>.<br>
+        <input type="text" class="fill-input" style="width:100%" placeholder="Pytanie: ..."><br><br>
+        2. Piotr pracuje <u>jako nauczyciel</u>.<br>
+        <input type="text" class="fill-input" style="width:100%" placeholder="Pytanie: ..."><br><br>
+        3. Spotkamy się <u>o piątej</u>.<br>
+        <input type="text" class="fill-input" style="width:100%" placeholder="Pytanie: ..."><br><br>
+        4. Kupiłem ten prezent <u>dla mamy</u>.<br>
+        <input type="text" class="fill-input" style="width:100%" placeholder="Pytanie: ...">
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- Gramatyka: Transformacje zdań -->
+    <div class="screen" id="screen-gram-transformacje">
+      <div class="section-header">Transformacje zdań</div>
+      <div class="exercise-instruction">Przekształć zdanie, używając podanego wyrazu. Nie zmieniaj podanego wyrazu.</div>
+      <span class="example-badge">Przykład</span>
+      <div class="exercise-text">
+        0. Nie mogę pójść na imprezę.<br>
+        (ŻEBY) → <strong>Nie dam rady, żeby pójść na imprezę.</strong>
+      </div>
+      <div class="exercise-text">
+        1. Ona jest najładniejsza w klasie.<br>
+        (OD) → <input type="text" class="fill-input" style="width:100%" placeholder="..."><br><br>
+        2. Muszę wcześnie wstać.<br>
+        (TRZEBA) → <input type="text" class="fill-input" style="width:100%" placeholder="..."><br><br>
+        3. On powiedział, że przyjdzie jutro.<br>
+        (OBIECAĆ) → <input type="text" class="fill-input" style="width:100%" placeholder="..."><br><br>
+        4. Byłem zmęczony, dlatego nie poszedłem na spacer.<br>
+        (BO) → <input type="text" class="fill-input" style="width:100%" placeholder="...">
+      </div>
+      <button class="btn mt-16" onclick="alert('Sprawdzam odpowiedzi...')">Sprawdź</button>
+    </div>
+
+    <!-- ========== PISANIE — WYBÓR ZESTAWU ========== -->
+    <div class="screen" id="screen-pisanie-zestawy">
+      <div class="section-header">Wybór zestawu</div>
+      <div class="exercise-instruction">Wybierz zestaw, aby rozpocząć ćwiczenie z pisania.</div>
+
+      <div class="zestaw-card">
+        <div class="zestaw-title">Zestaw 1</div>
+        <div class="zestaw-task">
+          <strong>Zadanie A</strong> (~30 słów)
+          <p>Napisz wiadomość do kolegi/koleżanki z zaproszeniem na swoje urodziny. Podaj datę, godzinę i miejsce spotkania.</p>
+        </div>
+        <div class="zestaw-task">
+          <strong>Zadanie B</strong> (~170 słów)
+          <p>W Twojej szkole językowej organizują wycieczkę do Krakowa. Napisz wpis na blog, w którym opiszesz, co chciałbyś/chciałabyś zobaczyć i dlaczego.</p>
+        </div>
+        <button class="btn btn-sm mt-8" onclick="navigateTo('screen-pisanie-ex','Pisanie — Zestaw 1')">Wybierz</button>
+      </div>
+
+      <div class="zestaw-card">
+        <div class="zestaw-title">Zestaw 2</div>
+        <div class="zestaw-task">
+          <strong>Zadanie A</strong> (~30 słów)
+          <p>Napisz e-mail do nauczyciela z informacją, że nie możesz przyjść na zajęcia. Podaj powód i przeproś.</p>
+        </div>
+        <div class="zestaw-task">
+          <strong>Zadanie B</strong> (~170 słów)
+          <p>Napisz rozprawkę na temat: "Czy warto uczyć się języków obcych?" Przedstaw argumenty za i przeciw.</p>
+        </div>
+        <button class="btn btn-sm mt-8" onclick="navigateTo('screen-pisanie-ex2','Pisanie — Zestaw 2')">Wybierz</button>
+      </div>
+
+      <div class="zestaw-card">
+        <div class="zestaw-title">Zestaw 3</div>
+        <div class="zestaw-task">
+          <strong>Zadanie A</strong> (~30 słów)
+          <p>Napisz ogłoszenie o sprzedaży roweru. Podaj cenę, opis i dane kontaktowe.</p>
+        </div>
+        <div class="zestaw-task">
+          <strong>Zadanie B</strong> (~170 słów)
+          <p>Napisz list formalny do dyrektora szkoły z prośbą o możliwość zorganizowania kółka językowego. Uzasadnij swoją prośbę.</p>
+        </div>
+        <button class="btn btn-sm mt-8" onclick="navigateTo('screen-pisanie-ex3','Pisanie — Zestaw 3')">Wybierz</button>
+      </div>
+    </div>
+
+    <!-- Pisanie Exercise 1 -->
+    <div class="screen" id="screen-pisanie-ex">
+      <div class="section-header">Zestaw 1</div>
+      <div class="task-card">
+        <h4>Zadanie A (~30 słów)</h4>
+        <p>Napisz wiadomość do kolegi/koleżanki z zaproszeniem na swoje urodziny. Podaj datę, godzinę i miejsce spotkania.</p>
+      </div>
+      <textarea class="task-textarea" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <div class="divider"></div>
+      <div class="task-card">
+        <h4>Zadanie B (~170 słów)</h4>
+        <p>W Twojej szkole językowej organizują wycieczkę do Krakowa. Napisz wpis na blog, w którym opiszesz, co chciałbyś/chciałabyś zobaczyć i dlaczego.</p>
+      </div>
+      <textarea class="task-textarea" style="min-height:200px" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <button class="btn mt-16" onclick="alert('Odpowiedzi zostały wysłane do sprawdzenia.')">Sprawdź</button>
+    </div>
+
+    <!-- Pisanie Exercise 2 -->
+    <div class="screen" id="screen-pisanie-ex2">
+      <div class="section-header">Zestaw 2</div>
+      <div class="task-card">
+        <h4>Zadanie A (~30 słów)</h4>
+        <p>Napisz e-mail do nauczyciela z informacją, że nie możesz przyjść na zajęcia. Podaj powód i przeproś.</p>
+      </div>
+      <textarea class="task-textarea" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <div class="divider"></div>
+      <div class="task-card">
+        <h4>Zadanie B (~170 słów)</h4>
+        <p>Napisz rozprawkę na temat: "Czy warto uczyć się języków obcych?" Przedstaw argumenty za i przeciw.</p>
+      </div>
+      <textarea class="task-textarea" style="min-height:200px" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <button class="btn mt-16" onclick="alert('Odpowiedzi zostały wysłane do sprawdzenia.')">Sprawdź</button>
+    </div>
+
+    <!-- Pisanie Exercise 3 -->
+    <div class="screen" id="screen-pisanie-ex3">
+      <div class="section-header">Zestaw 3</div>
+      <div class="task-card">
+        <h4>Zadanie A (~30 słów)</h4>
+        <p>Napisz ogłoszenie o sprzedaży roweru. Podaj cenę, opis i dane kontaktowe.</p>
+      </div>
+      <textarea class="task-textarea" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <div class="divider"></div>
+      <div class="task-card">
+        <h4>Zadanie B (~170 słów)</h4>
+        <p>Napisz list formalny do dyrektora szkoły z prośbą o możliwość zorganizowania kółka językowego. Uzasadnij swoją prośbę.</p>
+      </div>
+      <textarea class="task-textarea" style="min-height:200px" placeholder="Napisz tutaj swoją odpowiedź..."></textarea>
+      <button class="btn mt-16" onclick="alert('Odpowiedzi zostały wysłane do sprawdzenia.')">Sprawdź</button>
+    </div>
+
+    <!-- ========== MÓWIENIE ========== -->
+    <div class="screen" id="screen-mowienie">
+      <div class="section-header">Mówienie</div>
+      <div class="timer-bar" id="timer">Pozostały czas: 19:58</div>
+
+      <div class="task-card">
+        <h4>Zadanie A — Opis fotografii</h4>
+        <div class="photo-placeholder">&#128247;</div>
+        <p><em>Proszę opisać fotografię. Proszę powiedzieć:</em></p>
+        <ul style="margin:8px 0 0 20px;font-size:14px;color:#6d4c41;line-height:1.6">
+          <li>Co widać na fotografii?</li>
+          <li>Gdzie są te osoby?</li>
+          <li>Co robią?</li>
+          <li>Jak się czują?</li>
+        </ul>
+      </div>
+
+      <div class="task-card">
+        <h4>Zadanie B — Monolog</h4>
+        <p><em>Proszę przygotować wypowiedź na następujący temat:</em></p>
+        <p style="margin-top:8px;font-weight:600;color:#3e2723">"Jak spędzam wolny czas i dlaczego lubię swoje hobby?"</p>
+        <p style="margin-top:4px;font-size:13px;color:#8d6e63">Czas na przygotowanie: 2 minuty. Czas na wypowiedź: 3 minuty.</p>
+      </div>
+
+      <div class="task-card">
+        <h4>Zadanie C — Dialog</h4>
+        <p><em>Proszę przeprowadzić rozmowę w następującej sytuacji:</em></p>
+        <p style="margin-top:8px;font-weight:600;color:#3e2723">Jesteś w biurze podróży. Chcesz zarezerwować wycieczkę do Włoch. Zapytaj o termin, cenę i program wycieczki.</p>
+      </div>
+
+      <button class="btn mt-16" style="background:#c62828" onclick="alert('Ćwiczenie zakończone. Twoja odpowiedź została zapisana.')">Zakończ</button>
+    </div>
+
+    <!-- ========== TAB 3: POSTĘP ========== -->
+    <div class="screen" id="screen-postep">
+      <div class="section-header">Mój postęp</div>
+
+      <div class="profile-section">
+        <div style="font-size:16px;font-weight:700;color:#3e2723;margin-bottom:14px">Wykorzystanie limitu</div>
+        <div class="progress-row">
+          <div class="progress-label">Pisanie</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-val">0/3</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Mówienie</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-val">0/3</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Czytanie</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-val">0/5</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Gramatyka</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-val">0/10</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-label">Słuchanie</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="progress-val">0/5</div>
+        </div>
+        <div class="text-muted text-center mt-8">Limity odnowią się: 28/03/2026</div>
+      </div>
+
+      <div style="font-size:16px;font-weight:700;color:#3e2723;margin-bottom:12px">Wyniki</div>
+      <div class="result-card">
+        <div class="label">&#127911; Słuchanie</div>
+        <div class="value">80%</div>
+      </div>
+      <div class="result-card">
+        <div class="label">&#128196; Czytanie</div>
+        <div class="value">100%</div>
+      </div>
+      <div class="result-card">
+        <div class="label">&#128483; Mówienie</div>
+        <div class="value">3</div>
+      </div>
+    </div>
+
+    <!-- ========== TAB 4: PROFIL ========== -->
+    <div class="screen" id="screen-profil">
+      <div class="section-header">Profil</div>
+
+      <div class="profile-section">
+        <div class="profile-name">Denys Nehometianov</div>
+        <div class="profile-email">denis.negometyanov@gmail.com</div>
+      </div>
+
+      <div class="profile-section">
+        <div style="font-size:16px;font-weight:700;color:#3e2723;margin-bottom:12px">Plan i funkcje</div>
+        <div class="profile-row">
+          <div class="label">Aktualny plan</div>
+          <div class="value" style="color:#ff8f00">Premium Miesiąc</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Subskrypcja wygasa</div>
+          <div class="value">15/04/2026</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Pisanie (tygodniowo)</div>
+          <div class="value">3 zestawy</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Mówienie (tygodniowo)</div>
+          <div class="value">3 zestawy</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Czytanie (tygodniowo)</div>
+          <div class="value">5 zestawów</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Gramatyka (tygodniowo)</div>
+          <div class="value">10 zestawów</div>
+        </div>
+        <div class="profile-row">
+          <div class="label">Słuchanie (tygodniowo)</div>
+          <div class="value">5 zestawów</div>
+        </div>
+      </div>
+
+      <button class="btn mb-16" onclick="alert('Przekierowanie do sklepu...')">Kup lub ulepsz plan</button>
+
+      <div class="profile-section">
+        <div style="font-size:16px;font-weight:700;color:#3e2723;margin-bottom:12px">Powiadomienia</div>
+        <div class="profile-row">
+          <div class="label">Powiadomienia push</div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline" style="color:#c62828;border-color:#c62828;margin-bottom:14px" onclick="if(confirm('Czy na pewno chcesz usunąć konto?')) alert('Konto zostało usunięte.')">Usuń konto</button>
+
+      <div class="text-muted text-center">Wersja 1.2.5</div>
+    </div>
+
+    <!-- ========== SUB-PAGES: FAQ ========== -->
+    <div class="screen" id="screen-faq">
+      <div class="section-header">Pomoc i FAQ</div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-header">O aplikacji PolskiPro <span>&#9660;</span></div>
+        <div class="faq-body">
+          PolskiPro to aplikacja do przygotowania się do egzaminu z języka polskiego jako obcego na poziomie B1. Aplikacja zawiera ćwiczenia z pięciu części egzaminu: rozumienie ze słuchu, rozumienie tekstów pisanych, poprawność gramatyczna, pisanie i mówienie. Wszystkie ćwiczenia są opracowane na podstawie oficjalnych wymagań egzaminacyjnych i zawierają autentyczne materiały.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-header">Jak działają limity? <span>&#9660;</span></div>
+        <div class="faq-body">
+          Limity zależą od wybranego planu. W planie Premium Miesiąc możesz wykonać tygodniowo: 3 zestawy pisania, 3 zestawy mówienia, 5 zestawów czytania, 10 zestawów gramatyki i 5 zestawów słuchania. Limity odnawiają się co tydzień w poniedziałek.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-header">Polityka Prywatności <span>&#9660;</span></div>
+        <div class="faq-body">
+          Administratorem danych osobowych jest PolskiPro Sp. z o.o. Dane osobowe są przetwarzane w celu świadczenia usług drogą elektroniczną. Użytkownik ma prawo dostępu do swoich danych, ich poprawiania, usunięcia oraz ograniczenia przetwarzania. Szczegółowe informacje znajdziesz w pełnym dokumencie Polityki Prywatności na naszej stronie internetowej.
+        </div>
+      </div>
+
+      <button class="btn mt-16" onclick="alert('Formularz kontaktowy — wkrótce!')">Zadaj pytanie</button>
+    </div>
+
+    <!-- ========== SUB-PAGES: HARMONOGRAM ========== -->
+    <div class="screen" id="screen-harmonogram">
+      <div class="section-header">Harmonogram egzaminów</div>
+
+      <div class="exam-item">
+        <div class="exam-date">15 maja 2026</div>
+        <div class="exam-level">Poziom B1</div>
+        <div class="exam-location">Uniwersytet Warszawski, Warszawa</div>
+      </div>
+      <div class="exam-item">
+        <div class="exam-date">12 czerwca 2026</div>
+        <div class="exam-level">Poziom B1 / B2</div>
+        <div class="exam-location">Uniwersytet Jagielloński, Kraków</div>
+      </div>
+      <div class="exam-item">
+        <div class="exam-date">18 września 2026</div>
+        <div class="exam-level">Poziom B1</div>
+        <div class="exam-location">Uniwersytet Wrocławski, Wrocław</div>
+      </div>
+      <div class="exam-item">
+        <div class="exam-date">20 listopada 2026</div>
+        <div class="exam-level">Poziom B1 / B2 / C1</div>
+        <div class="exam-location">Uniwersytet Gdański, Gdańsk</div>
+      </div>
+      <div class="exam-item">
+        <div class="exam-date">11 grudnia 2026</div>
+        <div class="exam-level">Poziom B1</div>
+        <div class="exam-location">Uniwersytet Łódzki, Łódź</div>
+      </div>
+
+      <button class="btn mt-16" onclick="alert('Otwieranie strony z lokalizacjami...')">Sprawdź lokalizacje</button>
+    </div>
+
+    <!-- ========== SUB-PAGES: ALFABET ========== -->
+    <div class="screen" id="screen-alfabet">
+      <div class="section-header">Alfabet</div>
+      <div class="alpha-grid">
+        <div class="alpha-cell"><div class="alpha-letter">Aa</div><div class="alpha-word">auto</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ąą</div><div class="alpha-word">wąż</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Bb</div><div class="alpha-word">balon</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Cc</div><div class="alpha-word">cebula</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ćć</div><div class="alpha-word">ćma</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Dd</div><div class="alpha-word">dom</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ee</div><div class="alpha-word">ekran</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ęę</div><div class="alpha-word">ręka</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ff</div><div class="alpha-word">fotel</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Gg</div><div class="alpha-word">góra</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Hh</div><div class="alpha-word">hotel</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ii</div><div class="alpha-word">igła</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Jj</div><div class="alpha-word">jabłko</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Kk</div><div class="alpha-word">kot</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ll</div><div class="alpha-word">lampa</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Łł</div><div class="alpha-word">łódka</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Mm</div><div class="alpha-word">mama</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Nn</div><div class="alpha-word">nos</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ńń</div><div class="alpha-word">koń</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Oo</div><div class="alpha-word">okno</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Óó</div><div class="alpha-word">ósmy</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Pp</div><div class="alpha-word">pies</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Rr</div><div class="alpha-word">rower</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ss</div><div class="alpha-word">słońce</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Śś</div><div class="alpha-word">świat</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Tt</div><div class="alpha-word">telefon</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Uu</div><div class="alpha-word">ucho</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Ww</div><div class="alpha-word">woda</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Yy</div><div class="alpha-word">ryba</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Zz</div><div class="alpha-word">zamek</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Źź</div><div class="alpha-word">źródło</div></div>
+        <div class="alpha-cell"><div class="alpha-letter">Żż</div><div class="alpha-word">żaba</div></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ========== BOTTOM TAB BAR ========== -->
+  <div class="tab-bar">
+    <div class="tab active" data-tab="home" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Główna</span>
+    </div>
+    <div class="tab" data-tab="cwiczenia" onclick="switchTab('cwiczenia')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      <span>Ćwiczenia</span>
+    </div>
+    <div class="tab" data-tab="postep" onclick="switchTab('postep')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+      <span>Postęp</span>
+    </div>
+    <div class="tab" data-tab="profil" onclick="switchTab('profil')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>Profil</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Navigation state
+const history = [];
+let currentScreen = 'screen-home';
+let currentTab = 'home';
+
+const tabScreenMap = {
+  home: 'screen-home',
+  cwiczenia: 'screen-cwiczenia-list',
+  postep: 'screen-postep',
+  profil: 'screen-profil'
+};
+
+const tabTitles = {
+  home: 'PolskiPro',
+  cwiczenia: 'Ćwiczenia',
+  postep: 'Postęp',
+  profil: 'Profil'
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('active');
+    document.getElementById('contentArea').scrollTop = 0;
+  }
+  currentScreen = id;
+}
+
+function navigateTo(screenId, title) {
+  history.push({ screen: currentScreen, title: document.getElementById('topTitle').textContent });
+  showScreen(screenId);
+  document.getElementById('topTitle').textContent = title || '';
+  document.getElementById('backBtn').style.visibility = 'visible';
+}
+
+function goBack() {
+  if (history.length === 0) return;
+  const prev = history.pop();
+  showScreen(prev.screen);
+  document.getElementById('topTitle').textContent = prev.title;
+  if (history.length === 0) {
+    document.getElementById('backBtn').style.visibility = 'hidden';
+  }
+}
+
+function switchTab(tab) {
+  // Clear history when switching tabs
+  history.length = 0;
+  document.getElementById('backBtn').style.visibility = 'hidden';
+
+  // Update tab bar
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+
+  // Show screen
+  currentTab = tab;
+  showScreen(tabScreenMap[tab]);
+  document.getElementById('topTitle').textContent = tabTitles[tab];
+}
+
+// Radio selection
+function selectRadio(el) {
+  const group = el.closest('.radio-group');
+  group.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// P/F/B selection
+function selectPF(el, type) {
+  const group = el.closest('.pf-group');
+  group.querySelectorAll('.pf-btn').forEach(b => {
+    b.classList.remove('selected-p', 'selected-f', 'selected-b');
+  });
+  el.classList.add('selected-' + type);
+}
+
+// Drag and drop
+let draggedItem = null;
+
+function dragStart(e) {
+  draggedItem = e.target.closest('.drag-item');
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => draggedItem.style.opacity = '0.4', 0);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function drop(e) {
+  e.preventDefault();
+  const target = e.target.closest('.drag-item');
+  if (target && draggedItem && target !== draggedItem) {
+    const container = target.parentNode;
+    const items = [...container.children];
+    const dragIdx = items.indexOf(draggedItem);
+    const dropIdx = items.indexOf(target);
+    if (dragIdx < dropIdx) {
+      container.insertBefore(draggedItem, target.nextSibling);
+    } else {
+      container.insertBefore(draggedItem, target);
+    }
+    // Renumber
+    container.querySelectorAll('.drag-item').forEach((item, i) => {
+      item.querySelector('.num').textContent = i + 1;
+    });
+  }
+  if (draggedItem) draggedItem.style.opacity = '1';
+  draggedItem = null;
+}
+
+// Timer for Mówienie
+let timerSeconds = 19 * 60 + 58;
+const timerEl = document.getElementById('timer');
+
+function updateTimer() {
+  if (currentScreen !== 'screen-mowienie') return;
+  if (timerSeconds <= 0) return;
+  timerSeconds--;
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  timerEl.textContent = `Pozostały czas: ${m}:${s.toString().padStart(2, '0')}`;
+}
+
+setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
